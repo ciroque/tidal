@@ -18,6 +18,7 @@ int main() {
 
     signal(SIGINT, signalHandler);
     signal(SIGHUP, signalHandler);
+    signal(SIGKILL, signalHandler);
 
 
     while(true) {;}
