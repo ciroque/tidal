@@ -7,7 +7,7 @@
 
 void Application::Run() {
     std::cout << "Application is running" << std::endl;
-    const int DAYS = 30;
+    const int DAYS = 7;
     std::array<Phase, DAYS> phases;
     phases.at(0) = lunar->GetMoonPhase();
     for(int i = 1; i < DAYS; i++) {

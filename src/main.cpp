@@ -4,10 +4,17 @@
 #include <lunar.h>
 
 #include <iostream>
+#include <zconf.h>
+
+bool stop = false;
 
 void signalHandler(int signum) {
     std::cout << "Received signal: " << signum << std::endl;
-    exit(signum);
+    if(signum == SIGTERM
+        || signum == SIGINT
+        || signum == SIGKILL) {
+        stop = true;
+    }
 }
 
 int main() {
@@ -21,5 +28,7 @@ int main() {
     signal(SIGKILL, signalHandler);
 
 
-    while(true) {;}
+    while(!stop) { sleep(1); }
+
+    return 0;
 }
