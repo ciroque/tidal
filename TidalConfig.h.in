@@ -1,0 +1,3 @@
+// the configured options and settings for tidal
+#define tidal_VERSION_MAJOR @tidal_VERSION_MAJOR@
+#define tidal_VERSION_MINOR @tidal_VERSION_MINOR@
