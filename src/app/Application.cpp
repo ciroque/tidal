@@ -5,6 +5,7 @@
 #include <iostream>
 #include <thread>
 #include <zconf.h>
+#include <signal.h>
 
 #include "Application.h"
 #include "Sleeper.h"
