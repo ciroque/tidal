@@ -12,6 +12,7 @@
 #include "TideRetriever.h"
 #include "WeatherRetriever.h"
 
+
 bool Application::stop = false;
 
 Application::Application() {

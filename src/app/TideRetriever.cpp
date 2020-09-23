@@ -7,4 +7,5 @@
 
 void TideRetriever::Retrieve() {
     std::cout << "TideRetriever::Retrieve" << std::endl;
+    this->Retriever::Retrieve(host, port, path);
 }
