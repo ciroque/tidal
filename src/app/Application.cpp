@@ -33,16 +33,14 @@ void Application::Run() {
 }
 
 void Application::DailyUpdate() {
-    unsigned int period = Time::SecondsToNextDay();
     TideRetriever tideRetriever;
     WeatherRetriever weatherRetriever;
     while(!stop) {
-        std::cout << "DailyUpdate: period: " << period << std::endl;
+        std::cout << "DailyUpdate" << std::endl;
         GetMoonPhases();
         tideRetriever.Retrieve();
         weatherRetriever.Retrieve();
-        sleep(period);
-        period = SECONDS_IN_DAY;
+        sleep(Time::SecondsToNextDay());
     }
 }
 
@@ -61,12 +59,10 @@ void Application::GetMoonPhases() {
 }
 
 void Application::HourlyUpdate() {
-    unsigned int period = Time::SecondsToNextHour();
     while(!stop) {
         unsigned int hour = Time::HoursNow();
-        std::cout << "HourlyUpdate: period: " << period << ": hour: " << hour << std::endl;
-        sleep(period);
-        period = SECONDS_IN_HOUR;
+        std::cout << "HourlyUpdate: hour: " << hour << std::endl;
+        sleep(Time::SecondsToNextHour());
     }
 }
 
