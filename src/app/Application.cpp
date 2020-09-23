@@ -9,6 +9,8 @@
 
 #include "Application.h"
 #include "Sleeper.h"
+#include "TideRetriever.h"
+#include "WeatherRetriever.h"
 
 bool Application::stop = false;
 
@@ -32,11 +34,15 @@ void Application::Run() {
 
 void Application::DailyUpdate() {
     unsigned int period = Sleeper::SecondsToNextDay();
+    TideRetriever tideRetriever;
+    WeatherRetriever weatherRetriever;
     while(!stop) {
         std::cout << "DailyUpdate: period: " << period << std::endl;
         GetMoonPhases();
+        tideRetriever.Retrieve();
+        weatherRetriever.Retrieve();
         sleep(period);
-        period = 60 * 60 * 24;
+        period = SECONDS_IN_DAY;
     }
 }
 
@@ -59,7 +65,7 @@ void Application::HourlyUpdate() {
     while(!stop) {
         std::cout << "HourlyUpdate: period: " << period << std::endl;
         sleep(period);
-        period = 60 * 60;
+        period = SECONDS_IN_HOUR;
     }
 }
 

@@ -7,7 +7,8 @@
 
 
 class WeatherRetriever {
-
+public:
+    void Retrieve();
 };
 
 

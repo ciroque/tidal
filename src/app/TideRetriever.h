@@ -7,7 +7,8 @@
 
 
 class TideRetriever {
-
+public:
+    void Retrieve();
 };
 
 
