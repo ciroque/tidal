@@ -8,7 +8,7 @@
 #include <signal.h>
 
 #include "Application.h"
-#include "Sleeper.h"
+#include "Time.h"
 #include "TideRetriever.h"
 #include "WeatherRetriever.h"
 
@@ -33,7 +33,7 @@ void Application::Run() {
 }
 
 void Application::DailyUpdate() {
-    unsigned int period = Sleeper::SecondsToNextDay();
+    unsigned int period = Time::SecondsToNextDay();
     TideRetriever tideRetriever;
     WeatherRetriever weatherRetriever;
     while(!stop) {
@@ -61,9 +61,10 @@ void Application::GetMoonPhases() {
 }
 
 void Application::HourlyUpdate() {
-    unsigned int period = Sleeper::SecondsToNextHour();
+    unsigned int period = Time::SecondsToNextHour();
     while(!stop) {
-        std::cout << "HourlyUpdate: period: " << period << std::endl;
+        unsigned int hour = Time::HoursNow();
+        std::cout << "HourlyUpdate: period: " << period << ": hour: " << hour << std::endl;
         sleep(period);
         period = SECONDS_IN_HOUR;
     }
