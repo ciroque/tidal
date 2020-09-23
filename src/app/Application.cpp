@@ -8,24 +8,32 @@
 
 #include "Application.h"
 
+bool Application::stop = false;
+
 Application::Application() {
 }
 
 Application::~Application() {
 }
 
-bool Application::stop = false;
-
 void Application::Run() {
-    signal(SIGINT, signalHandler);
-    signal(SIGHUP, signalHandler);
-    signal(SIGKILL, signalHandler);
+    signal(SIGINT, SignalHandler);
+    signal(SIGHUP, SignalHandler);
+    signal(SIGKILL, SignalHandler);
 
     std::thread hourly (HourlyUpdate);
     std::thread daily (DailyUpdate);
 
     hourly.join();
     daily.join();
+}
+
+void Application::DailyUpdate() {
+    while(!stop) {
+        std::cout << "DailyUpdate" << std::endl;
+        GetMoonPhases();
+        sleep(24);
+    }
 }
 
 void Application::GetMoonPhases() {
@@ -42,15 +50,6 @@ void Application::GetMoonPhases() {
     }
 }
 
-void Application::signalHandler(int signum) {
-    std::cout << "Received signal: " << signum << std::endl;
-    if(signum == SIGTERM
-       || signum == SIGINT
-       || signum == SIGKILL) {
-        exit(signum);
-    }
-}
-
 void Application::HourlyUpdate() {
     while(!stop) {
         std::cout << "HourlyUpdate" << std::endl;
@@ -58,10 +57,11 @@ void Application::HourlyUpdate() {
     }
 }
 
-void Application::DailyUpdate() {
-    while(!stop) {
-        std::cout << "DailyUpdate" << std::endl;
-        GetMoonPhases();
-        sleep(24);
+void Application::SignalHandler(int signum) {
+    std::cout << "Received signal: " << signum << std::endl;
+    if(signum == SIGTERM
+       || signum == SIGINT
+       || signum == SIGKILL) {
+        exit(signum);
     }
 }

@@ -17,10 +17,10 @@ private:
     int period = 7;
     static bool stop;
 
-    static void signalHandler(int signum);
+    static void DailyUpdate();
     static void GetMoonPhases();
     static void HourlyUpdate();
-    static void DailyUpdate();
+    static void SignalHandler(int signum);
 };
 
 
