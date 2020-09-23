@@ -5,7 +5,7 @@ configure_file(TidalConfig.h.in TidalConfig.h)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(tidal src/main.cpp src/app/Application.cpp src/app/Application.h src/app/TideRetriever.cpp src/app/TideRetriever.h src/app/WeatherRetriever.cpp src/app/WeatherRetriever.h)
+add_executable(tidal src/main.cpp src/app/Application.cpp src/app/Application.h src/app/TideRetriever.cpp src/app/TideRetriever.h src/app/WeatherRetriever.cpp src/app/WeatherRetriever.h src/app/Sleeper.cpp src/app/Sleeper.h)
 
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar)
 

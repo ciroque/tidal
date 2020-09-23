@@ -7,6 +7,7 @@
 #include <zconf.h>
 
 #include "Application.h"
+#include "Sleeper.h"
 
 bool Application::stop = false;
 
@@ -29,10 +30,12 @@ void Application::Run() {
 }
 
 void Application::DailyUpdate() {
+    unsigned int period = Sleeper::SecondsToNextDay();
     while(!stop) {
-        std::cout << "DailyUpdate" << std::endl;
+        std::cout << "DailyUpdate: period: " << period << std::endl;
         GetMoonPhases();
-        sleep(24);
+        sleep(period);
+        period = 60 * 60 * 24;
     }
 }
 
@@ -51,9 +54,11 @@ void Application::GetMoonPhases() {
 }
 
 void Application::HourlyUpdate() {
+    unsigned int period = Sleeper::SecondsToNextHour();
     while(!stop) {
-        std::cout << "HourlyUpdate" << std::endl;
-        sleep(1);
+        std::cout << "HourlyUpdate: period: " << period << std::endl;
+        sleep(period);
+        period = 60 * 60;
     }
 }
 
