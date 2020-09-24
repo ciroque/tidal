@@ -3,21 +3,26 @@
 //
 
 #include "Retriever.h"
+#include "root_certificates.h"
 
 #include <string>
 #include <iostream>
 #include <cstdlib>
+#include <boost/beast.hpp>
+#include <boost/beast/ssl/ssl_stream.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
+#include <boost/asio/ssl/context.hpp>
 
 namespace beast = boost::beast;     // from <boost/beast.hpp>
 namespace http = beast::http;       // from <boost/beast/http.hpp>
 namespace net = boost::asio;        // from <boost/asio.hpp>
-namespace ssl = boost::asio::ssl;
-//namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
+namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
 unsigned int Retriever::Retrieve(std::string host, std::string port, std::string target) {
@@ -42,7 +47,7 @@ unsigned int Retriever::Retrieve(std::string host, std::string port, std::string
         beast::ssl_stream<beast::tcp_stream> stream(ioc, ctx);
 
         // Set SNI Hostname (many hosts need this to handshake successfully)
-        if(! SSL_set_tlsext_host_name(stream.native_handle(), host))
+        if(! SSL_set_tlsext_host_name(stream.native_handle(), static_cast<void*>(&host)))
         {
             beast::error_code ec{static_cast<int>(::ERR_get_error()), net::error::get_ssl_category()};
             throw beast::system_error{ec};
