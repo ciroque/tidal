@@ -16,9 +16,10 @@ public:
 private:
     int period = 7;
     static bool stop;
+    const static int DAYS = 7;
 
     static void DailyUpdate();
-    static void GetMoonPhases();
+    static std::array<Phase, DAYS> GetMoonPhases();
     static void HourlyUpdate();
     static void SignalHandler(int signum);
 };

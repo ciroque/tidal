@@ -38,25 +38,26 @@ void Application::DailyUpdate() {
     WeatherRetriever weatherRetriever;
     while(!stop) {
         std::cout << "DailyUpdate" << std::endl;
-        GetMoonPhases();
+        auto phases = GetMoonPhases();
+        for(auto phase = phases.begin(); phase != phases.end(); phase++)
+        {
+            std::cout << phase->julianDay << ": " << Lunar::GetSegmentName(phase->segment) << " (" << phase->visible * 100 << "%)" << std::endl;
+        }
         tideRetriever.Retrieve();
         weatherRetriever.Retrieve();
         sleep(Time::SecondsToNextDay());
     }
 }
 
-void Application::GetMoonPhases() {
+std::array<Phase, Application::DAYS> Application::GetMoonPhases() {
     Lunar lunar;
-    const int DAYS = 7;
     std::array<Phase, DAYS> phases;
     phases.at(0) = lunar.GetMoonPhase();
     for(int i = 1; i < DAYS; i++) {
         phases.at(i) = lunar.GetMoonPhase(phases.at(0).julianDay + i);
     }
 
-    for(auto it = phases.begin(); it != phases.end(); it++) {
-        std::cout << it->julianDay << ": " << Lunar::GetSegmentName(it->segment) << " (" << it->visible * 100 << "%)" << std::endl;
-    }
+    return phases;
 }
 
 void Application::HourlyUpdate() {
