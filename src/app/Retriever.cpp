@@ -3,37 +3,57 @@
 //
 
 #include "Retriever.h"
-#include "root_certificates.h"
 
 #include <string>
-#include <iostream>
 #include <cstdlib>
-#include <boost/beast.hpp>
-#include <boost/beast/ssl/ssl_stream.hpp>
+
+#include "root_certificates.h"
+
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
+#include <boost/beast/ssl.hpp>
 #include <boost/beast/version.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
-#include <boost/asio/ssl/context.hpp>
+#include <boost/asio/ssl/error.hpp>
+#include <boost/asio/ssl/stream.hpp>
+#include <cstdlib>
+#include <iostream>
+#include <string>
 
-namespace beast = boost::beast;     // from <boost/beast.hpp>
-namespace http = beast::http;       // from <boost/beast/http.hpp>
-namespace net = boost::asio;        // from <boost/asio.hpp>
+namespace beast = boost::beast; // from <boost/beast.hpp>
+namespace http = beast::http;   // from <boost/beast/http.hpp>
+namespace net = boost::asio;    // from <boost/asio.hpp>
 namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
-using tcp = net::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
+using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
+
 
 unsigned int Retriever::Retrieve(std::string host, std::string port, std::string target) {
     try
     {
+/*
+        // Check command line arguments.
+        if(argc != 4 && argc != 5)
+        {
+            std::cerr <<
+                      "Usage: http-client-sync-ssl <host> <port> <target> [<HTTP version: 1.0 or 1.1(default)>]\n" <<
+                      "Example:\n" <<
+                      "    http-client-sync-ssl www.example.com 443 /\n" <<
+                      "    http-client-sync-ssl www.example.com 443 / 1.0\n";
+            return EXIT_FAILURE;
+        }
+        auto const host = argv[1];
+        auto const port = argv[2];
+        auto const target = argv[3];
+*/
+
         int version = 11;
 
         // The io_context is required for all I/O
         net::io_context ioc;
 
         // The SSL context is required, and holds certificates
+//        ssl::context ctx(ssl::context::tlsv12_client);
         ssl::context ctx(ssl::context::tlsv12_client);
 
         // This holds the root certificate used for verification
@@ -47,16 +67,20 @@ unsigned int Retriever::Retrieve(std::string host, std::string port, std::string
         beast::ssl_stream<beast::tcp_stream> stream(ioc, ctx);
 
         // Set SNI Hostname (many hosts need this to handshake successfully)
-        if(! SSL_set_tlsext_host_name(stream.native_handle(), static_cast<void*>(&host)))
+        if(! SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
         {
             beast::error_code ec{static_cast<int>(::ERR_get_error()), net::error::get_ssl_category()};
             throw beast::system_error{ec};
         }
+
         // Look up the domain name
         auto const results = resolver.resolve(host, port);
 
         // Make the connection on the IP address we get from a lookup
-        stream.connect(results);
+        beast::get_lowest_layer(stream).connect(results);
+
+        // Perform the SSL handshake
+        stream.handshake(ssl::stream_base::client);
 
         // Set up an HTTP GET request message
         http::request<http::string_body> req{http::verb::get, target, version};
@@ -78,14 +102,16 @@ unsigned int Retriever::Retrieve(std::string host, std::string port, std::string
         // Write the message to standard out
         std::cout << res << std::endl;
 
-        // Gracefully close the socket
+        // Gracefully close the stream
         beast::error_code ec;
-        stream.socket().shutdown(tcp::socket::shutdown_both, ec);
-
-        // not_connected happens sometimes
-        // so don't bother reporting it.
-        //
-        if(ec && ec != beast::errc::not_connected)
+        stream.shutdown(ec);
+        if(ec == net::error::eof)
+        {
+            // Rationale:
+            // http://stackoverflow.com/questions/25587403/boost-asio-ssl-async-shutdown-always-finishes-with-an-error
+            ec = {};
+        }
+        if(ec)
             throw beast::system_error{ec};
 
         // If we get here then the connection is closed gracefully
@@ -94,6 +120,11 @@ unsigned int Retriever::Retrieve(std::string host, std::string port, std::string
     {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
+    } catch (const std::string& ex) {
+        std::cerr << "Error string: " << ex << std::endl;
+    } catch (...) {        std::cerr << "Some other error " << std::endl;// ...
     }
+
+
     return EXIT_SUCCESS;
 }

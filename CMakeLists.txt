@@ -12,11 +12,10 @@ add_executable(tidal src/main.cpp src/app/Application.cpp src/app/Application.h 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar)
 
-target_link_libraries(tidal PUBLIC /usr/local/lib/liblunarstatic-d.a pthread)
+target_link_libraries(tidal PUBLIC /usr/local/lib/liblunarstatic.a pthread)
 target_link_libraries(tidal
     LINK_PUBLIC
     ${Boost_LIBRARIES}
-    lib-asio
-    lib-asio-ssl
-    lib-beast
+    ssl
+    crypto
 )
