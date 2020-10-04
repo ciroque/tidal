@@ -4,9 +4,9 @@
 
 #include "DisplayManager.h"
 #include "../graphLib/graphLib.h"
+#include "DisplayData.h"
 
 using namespace boost::adaptors;
-
 
 void DisplayManager::LoadMoonImages() {
     fileNames.at(0) = "./New.bmp";
@@ -68,13 +68,12 @@ void DisplayManager::CopyBuffer()
     fclose(frameBuffer);
 }
 
-void DisplayManager::Render(std::vector<Phase> moonPhases) {
+void DisplayManager::Render(DisplayData displayData) {
     LGL_cls(buffer);
-    for(const auto& phase : moonPhases | indexed()) {
+    for(const auto& phase : displayData.lunarData.moonPhases | indexed()) {
         copyBitmap(buffer, moonImages.at(phase.value().segment), phase.index() * 131, 0);
     }
     CopyBuffer();
 }
 
-DisplayManager::DisplayManager() {
-}
+DisplayManager::DisplayManager() = default;

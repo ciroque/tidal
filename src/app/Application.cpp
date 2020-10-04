@@ -5,33 +5,25 @@
 #include <iostream>
 #include <thread>
 #include <zconf.h>
-#include <signal.h>
+#include <csignal>
 
 #include "Application.h"
 #include "Time.h"
 #include "TideRetriever.h"
 #include "WeatherRetriever.h"
+#include "DisplayData.h"
 
 
 bool Application::stop = false;
 
-Application::Application() {
-}
+Application::Application() = default;
 
-Application::~Application() {
-}
+Application::~Application() = default;
 
 void Application::Run() {
-    signal(SIGINT, SignalHandler);
-    signal(SIGHUP, SignalHandler);
-    signal(SIGKILL, SignalHandler);
+    RegisterSignalHandlers();
 
-    try {
-        Application::_DisplayManager.LoadMoonImages();
-    } catch(std::runtime_error error) {
-        std::cerr << error.what();
-        exit(1);
-    }
+    Application::DisplayMgr.LoadMoonImages();
 
     std::thread hourly (HourlyUpdate);
     std::thread daily (DailyUpdate);
@@ -40,40 +32,48 @@ void Application::Run() {
     daily.join();
 }
 
-DisplayManager Application::_DisplayManager;
+void Application::RegisterSignalHandlers() {
+    signal(SIGINT, SignalHandler);
+    signal(SIGHUP, SignalHandler);
+    signal(SIGKILL, SignalHandler);
+}
+
+DisplayManager Application::DisplayMgr;
 
 void Application::DailyUpdate() {
-    TideRetriever tideRetriever;
-    WeatherRetriever weatherRetriever;
     while(!stop) {
         std::cout << "DailyUpdate" << std::endl;
-        auto phases = GetMoonPhases();
-        Application::_DisplayManager.Render(phases);
-        for(auto phase = phases.begin(); phase != phases.end(); phase++)
-        {
-            std::cout << phase->julianDay << ": " << Lunar::GetSegmentName(phase->segment) << " (" << phase->visible * 100 << "%)" << std::endl;
-        }
-        tideRetriever.Retrieve();
-        weatherRetriever.Retrieve();
         sleep(Time::SecondsToNextDay());
     }
 }
 
-std::vector<Phase> Application::GetMoonPhases() {
-    Lunar lunar;
+LunarData Application::GetLunarData() {
+    LunarData lunarData;
     const int FIRST = 0;
     std::vector<Phase> phases;
-    phases.push_back(lunar.GetMoonPhase());
+    phases.push_back(Lunar::GetMoonPhase());
     for(int i = 1; i < DAYS; i++) {
-        phases.push_back(lunar.GetMoonPhase(phases.at(FIRST).julianDay + i));
+        phases.push_back(Lunar::GetMoonPhase(phases.at(FIRST).julianDay + i));
     }
-    return phases;
+    return lunarData;
 }
 
 void Application::HourlyUpdate() {
+    DisplayData displayData;
+    TideRetriever tideRetriever;
+    WeatherRetriever weatherRetriever;
     while(!stop) {
-        unsigned int hour = Time::HoursNow();
-        std::cout << "HourlyUpdate: hour: " << hour << std::endl;
+        displayData.hour = Time::HoursNow();
+        std::cout << "HourlyUpdate: hour: " << displayData.hour << std::endl;
+
+        if(!displayData.loaded || displayData.hour == ZERO_HOUR) {
+            displayData.lunarData = GetLunarData();
+            tideRetriever.Retrieve(); // TODO: Grab the data and store it in the DisplayData class
+            weatherRetriever.Retrieve();  // TODO: Grab the data and store it in the DisplayData class
+        }
+
+        Application::DisplayMgr.Render(displayData);
+
         sleep(Time::SecondsToNextHour());
     }
 }

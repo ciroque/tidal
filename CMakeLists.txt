@@ -21,7 +21,14 @@ add_executable(tidal
         src/app/root_certificates.h
         src/app/DisplayManager.cpp
         src/app/DisplayManager.h
-        )
+        src/app/DisplayData.cpp
+        src/app/DisplayData.h
+        src/app/WeatherData.cpp
+        src/app/WeatherData.h
+        src/app/TideData.cpp
+        src/app/TideData.h
+        src/app/LunarData.cpp
+        src/app/LunarData.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar)

@@ -6,6 +6,7 @@
 #define TIDAL_DISPLAYMANAGER_H
 
 #include "../graphLib/graphLib.h"
+#include "DisplayData.h"
 
 #include <boost/range/adaptor/indexed.hpp>
 #include <SDL2/SDL.h>
@@ -17,7 +18,7 @@
 class DisplayManager {
 public:
     DisplayManager();
-    void Render(std::vector<Phase> moonPhases);
+    void Render(DisplayData displayData);
     void LoadMoonImages();
 
 private:
@@ -29,6 +30,5 @@ private:
     static frameBuf* FrameBufFromSurface(SDL_Surface *img);
     void CopyBuffer();
 };
-
 
 #endif //TIDAL_DISPLAYMANAGER_H
