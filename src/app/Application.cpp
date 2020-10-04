@@ -69,6 +69,7 @@ void Application::HourlyUpdate() {
             displayData.lunarData = GetLunarData();
             tideRetriever.Retrieve(); // TODO: Grab the data and store it in the DisplayData class
             weatherRetriever.Retrieve();  // TODO: Grab the data and store it in the DisplayData class
+            displayData.loaded = true;
         }
 
         Application::DisplayMgr.Render(displayData);
