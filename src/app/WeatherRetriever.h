@@ -6,9 +6,16 @@
 #define TIDAL_WEATHERRETRIEVER_H
 
 
-class WeatherRetriever {
+#include "Retriever.h"
+
+class WeatherRetriever : Retriever {
 public:
     void Retrieve();
+
+private:
+    const std::string port = "443";
+    const std::string host = "api.weather.gov";
+    const std::string path = "/gridpoints/sew/119,76";
 };
 
 

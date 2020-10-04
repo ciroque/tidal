@@ -6,10 +6,15 @@
 #define TIDAL_RETRIEVER_H
 
 #include <string>
+#include <boost/beast/http/message.hpp>
+#include <boost/beast/http/dynamic_body.hpp>
+
+namespace beast = boost::beast; // from <boost/beast.hpp>
+namespace http = beast::http;   // from <boost/beast/http.hpp>
 
 class Retriever {
 protected:
-    unsigned int Retrieve(std::string host, std::string port, std::string target);
+    std::string Retrieve(std::string host, std::string port, std::string target);
 };
 
 

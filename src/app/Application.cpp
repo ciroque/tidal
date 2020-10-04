@@ -22,14 +22,9 @@ Application::~Application() = default;
 
 void Application::Run() {
     RegisterSignalHandlers();
-
     Application::DisplayMgr.LoadMoonImages();
-
     std::thread hourly (HourlyUpdate);
-    std::thread daily (DailyUpdate);
-
     hourly.join();
-    daily.join();
 }
 
 void Application::RegisterSignalHandlers() {
@@ -39,13 +34,6 @@ void Application::RegisterSignalHandlers() {
 }
 
 DisplayManager Application::DisplayMgr;
-
-void Application::DailyUpdate() {
-    while(!stop) {
-        std::cout << "DailyUpdate" << std::endl;
-        sleep(Time::SecondsToNextDay());
-    }
-}
 
 LunarData Application::GetLunarData() {
     LunarData lunarData;
