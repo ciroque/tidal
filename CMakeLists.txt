@@ -18,4 +18,5 @@ target_link_libraries(tidal
     ${Boost_LIBRARIES}
     ssl
     crypto
+    SDL2
 )
