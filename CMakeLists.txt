@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(tidal VERSION 0.1)
+project(tidal VERSION 0.2)
 
 find_package(Boost 1.73 REQUIRED)
 
