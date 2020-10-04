@@ -50,10 +50,9 @@ void Application::DailyUpdate() {
 LunarData Application::GetLunarData() {
     LunarData lunarData;
     const int FIRST = 0;
-    std::vector<Phase> phases;
-    phases.push_back(Lunar::GetMoonPhase());
+    lunarData.moonPhases.push_back(Lunar::GetMoonPhase());
     for(int i = 1; i < DAYS; i++) {
-        phases.push_back(Lunar::GetMoonPhase(phases.at(FIRST).julianDay + i));
+        lunarData.moonPhases.push_back(Lunar::GetMoonPhase(lunarData.moonPhases.at(FIRST).julianDay + i));
     }
     return lunarData;
 }
