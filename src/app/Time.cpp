@@ -8,7 +8,7 @@
 
 unsigned int Time::SecondsToNextHour() {
     tm* localTime = GetLocalTime();
-    unsigned int minutes = 60 - localTime->tm_min;
+    unsigned int minutes = 60 - localTime->tm_min - 1;
     unsigned int seconds = 60 - localTime->tm_sec;
     return (minutes * 60) + seconds;
 }
@@ -16,7 +16,7 @@ unsigned int Time::SecondsToNextHour() {
 unsigned int Time::SecondsToNextDay() {
     tm* localTime = GetLocalTime();
     unsigned int hours = 24 - localTime->tm_hour;
-    unsigned int minutes = 60 - localTime->tm_min;
+    unsigned int minutes = 60 - localTime->tm_min - 1;
     unsigned int seconds = 60 - localTime->tm_sec;
     return (hours * 60 * 60) + (minutes * 60) + seconds;
 }
