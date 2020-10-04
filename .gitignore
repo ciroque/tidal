@@ -4,3 +4,13 @@
 # CMake
 cmake-build-*/
 
+CMakeCache.txt
+CMakeFiles/
+TidalConfig.h
+
+tidal
+tidal.cbp
+
+Makefile
+
+cmake_install.cmake
