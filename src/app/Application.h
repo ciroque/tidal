@@ -6,6 +6,7 @@
 #define TIDAL_APPLICATION_H
 
 #include <lunar.h>
+#include "DisplayManager.h"
 
 class Application {
 public:
@@ -18,8 +19,10 @@ private:
     static bool stop;
     const static int DAYS = 7;
 
+    static DisplayManager _DisplayManager;
+
     static void DailyUpdate();
-    static std::array<Phase, DAYS> GetMoonPhases();
+    static std::vector<Phase> GetMoonPhases();
     static void HourlyUpdate();
     static void SignalHandler(int signum);
 };

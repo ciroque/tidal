@@ -10,20 +10,24 @@
 #include <boost/range/adaptor/indexed.hpp>
 #include <SDL2/SDL.h>
 #include <array>
+#include <lunar.h>
 
 //using namespace boost::adaptors;
 
 class DisplayManager {
-    static void Render();
+public:
+    DisplayManager();
+    void Render(std::vector<Phase> moonPhases);
+    void LoadMoonImages();
 
 private:
     static const int PHASECOUNT = 8;
     std::array<std::string, PHASECOUNT> fileNames;
-    std::array<frameBuf*, PHASECOUNT> moonImages;
+    std::array<frameBuf*, PHASECOUNT> moonImages{};
+    frameBuf *buffer = createBuffer(1024, 768, 32);
 
-    void LoadMoonImages();
-    frameBuf* FrameBufFromSurface(SDL_Surface *img);
-    int copyBuffer(unsigned int *fb);
+    static frameBuf* FrameBufFromSurface(SDL_Surface *img);
+    void CopyBuffer();
 };
 
 

@@ -26,6 +26,13 @@ void Application::Run() {
     signal(SIGHUP, SignalHandler);
     signal(SIGKILL, SignalHandler);
 
+    try {
+        Application::_DisplayManager.LoadMoonImages();
+    } catch(std::runtime_error error) {
+        std::cerr << error.what();
+        exit(1);
+    }
+
     std::thread hourly (HourlyUpdate);
     std::thread daily (DailyUpdate);
 
@@ -33,12 +40,15 @@ void Application::Run() {
     daily.join();
 }
 
+DisplayManager Application::_DisplayManager;
+
 void Application::DailyUpdate() {
     TideRetriever tideRetriever;
     WeatherRetriever weatherRetriever;
     while(!stop) {
         std::cout << "DailyUpdate" << std::endl;
         auto phases = GetMoonPhases();
+        Application::_DisplayManager.Render(phases);
         for(auto phase = phases.begin(); phase != phases.end(); phase++)
         {
             std::cout << phase->julianDay << ": " << Lunar::GetSegmentName(phase->segment) << " (" << phase->visible * 100 << "%)" << std::endl;
@@ -49,14 +59,14 @@ void Application::DailyUpdate() {
     }
 }
 
-std::array<Phase, Application::DAYS> Application::GetMoonPhases() {
+std::vector<Phase> Application::GetMoonPhases() {
     Lunar lunar;
-    std::array<Phase, DAYS> phases;
-    phases.at(0) = lunar.GetMoonPhase();
+    const int FIRST = 0;
+    std::vector<Phase> phases;
+    phases.push_back(lunar.GetMoonPhase());
     for(int i = 1; i < DAYS; i++) {
-        phases.at(i) = lunar.GetMoonPhase(phases.at(0).julianDay + i);
+        phases.push_back(lunar.GetMoonPhase(phases.at(FIRST).julianDay + i));
     }
-
     return phases;
 }
 

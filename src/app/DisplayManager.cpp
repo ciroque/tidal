@@ -3,15 +3,13 @@
 //
 
 #include "DisplayManager.h"
+#include "../graphLib/graphLib.h"
 
 using namespace boost::adaptors;
 
-void DisplayManager::Render() {
-
-}
 
 void DisplayManager::LoadMoonImages() {
-    fileNames.at(0) = "New.bmp";
+    fileNames.at(0) = "./New.bmp";
     fileNames.at(1) = "WaxingCrescent.bmp";
     fileNames.at(2) = "FirstQuarter.bmp";
     fileNames.at(3) = "WaxingGibbous.bmp";
@@ -23,10 +21,16 @@ void DisplayManager::LoadMoonImages() {
     /*Sprite Creation Start*/
     SDL_Init(SDL_INIT_EVERYTHING);
     for(const auto& fileName : fileNames | indexed()) {
-        auto *temp = SDL_LoadBMP(fileName.value().c_str());
+        auto *bmp = SDL_LoadBMP(fileName.value().c_str());
         /*Copy pixel data to sprite buffer*/
-        moonImages.at(fileName.index()) = FrameBufFromSurface(temp);
-        SDL_FreeSurface(temp);
+        if(!bmp) {
+            std::string error;
+            error.append("Could not load image: ");
+            error.append(fileName.value());
+            throw std::runtime_error(error);
+        }
+        moonImages.at(fileName.index()) = FrameBufFromSurface(bmp);
+        SDL_FreeSurface(bmp);
     }
     /*Sprite Creation End*/
 }
@@ -46,25 +50,31 @@ frameBuf *DisplayManager::FrameBufFromSurface(SDL_Surface *img)
             ((Uint8 *)sprite->fb)[4 * i + 2] =
                     ((Uint8 *)img->pixels)[img->pitch * i / img->w + 2];
         }else{
-            sprite->fb[i] = (int)((Uint8 *)img->pixels)[i];
-            sprite->fb[i] |= (int)((Uint8 *)img->pixels)[i] << 8;
-            sprite->fb[i] |= (int)((Uint8 *)img->pixels)[i] << 16;
+            sprite->fb[i] = (unsigned int)((Uint8 *)img->pixels)[i];
+            sprite->fb[i] |= (unsigned int)((Uint8 *)img->pixels)[i] << 8;
+            sprite->fb[i] |= (unsigned int)((Uint8 *)img->pixels)[i] << 16;
         }
     }
     SDL_UnlockSurface(img);
     return sprite;
 }
 
-int DisplayManager::copyBuffer(unsigned int *fb)
+void DisplayManager::CopyBuffer()
 {
-    FILE *thingey = fopen("/dev/fb0", "w");
-    if(!thingey)
-    {
-        perror("Could not open thingey");
-        return 1;
-    }
-    fwrite(fb, sizeof(int), SIZE, thingey);
-    fclose(thingey);
+    FILE *frameBuffer = fopen("/dev/fb0", "w");
+    if(!frameBuffer)
+        throw("Could not open frameBuffer");
+    fwrite(buffer->fb, sizeof(int), buffer->size, frameBuffer);
+    fclose(frameBuffer);
+}
 
-    return 0;
+void DisplayManager::Render(std::vector<Phase> moonPhases) {
+    LGL_cls(buffer);
+    for(const auto& phase : moonPhases | indexed()) {
+        copyBitmap(buffer, moonImages.at(phase.value().segment), phase.index() * 131, 0);
+    }
+    CopyBuffer();
+}
+
+DisplayManager::DisplayManager() {
 }
