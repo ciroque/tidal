@@ -8,9 +8,9 @@
 
 unsigned int Time::SecondsToNextHour() {
     tm* localTime = GetLocalTime();
-    unsigned int minutes = 60 - localTime->tm_min;
+    unsigned int minutes = 59 - localTime->tm_min;
     unsigned int seconds = 60 - localTime->tm_sec;
-    return ((minutes - 1) * 60) + seconds;
+    return (minutes * 60) + seconds;
 }
 
 unsigned int Time::HoursNow() {
