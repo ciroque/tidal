@@ -76,7 +76,7 @@ void DisplayManager::Render(DisplayData displayData) {
     for(const auto& phase : displayData.lunarData.moonPhases | indexed()) {
         copyBitmap(buffer,
                    moonImages.at(phase.value().segment),
-                   phase.index() * channelWidth + channelOffset - moonImages.at(phase.value().segment)->width,
+                   phase.index() * channelWidth + channelOffset - (moonImages.at(phase.value().segment)->width / 2),
                    0);
     }
     CopyBuffer();
