@@ -16,6 +16,8 @@
 
 bool Application::stop = false;
 
+DisplayManager Application::DisplayMgr;
+
 Application::Application() = default;
 
 Application::~Application() = default;
@@ -32,8 +34,6 @@ void Application::RegisterSignalHandlers() {
     signal(SIGHUP, SignalHandler);
     signal(SIGKILL, SignalHandler);
 }
-
-DisplayManager Application::DisplayMgr;
 
 LunarData Application::GetLunarData() {
     LunarData lunarData;
