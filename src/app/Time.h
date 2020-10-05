@@ -12,7 +12,6 @@ private:
     static tm* GetLocalTime();
 public:
     static unsigned int SecondsToNextHour();
-    static unsigned int SecondsToNextDay();
     static unsigned int HoursNow();
 };
 
