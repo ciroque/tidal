@@ -71,11 +71,12 @@ void DisplayManager::CopyBuffer()
 void DisplayManager::Render(DisplayData displayData) {
     LGL_cls(buffer);
     auto phaseCount = displayData.lunarData.moonPhases.size();
-    int channelOffset = buffer->width / (phaseCount * 2);
+    int channelWidth = buffer->width / phaseCount;
+    int channelOffset = channelWidth / 2;
     for(const auto& phase : displayData.lunarData.moonPhases | indexed()) {
         copyBitmap(buffer,
                    moonImages.at(phase.value().segment),
-                   phase.index() * channelOffset + channelOffset,
+                   phase.index() * channelWidth + channelOffset - moonImages.at(phase.value().segment)->width,
                    0);
     }
     CopyBuffer();
