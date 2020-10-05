@@ -8,9 +8,8 @@
 #include <ctime>
 
 class Time {
-private:
-    static tm* GetLocalTime();
 public:
+    static tm* GetLocalTime();
     static unsigned int SecondsToNextHour();
     static unsigned int HoursNow();
 };

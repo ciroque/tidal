@@ -62,7 +62,10 @@ void Application::HourlyUpdate() {
 
         Application::DisplayMgr.Render(displayData);
 
-        sleep(Time::SecondsToNextHour());
+        unsigned int secondsToNextHour = Time::SecondsToNextHour();
+        auto lt = Time::GetLocalTime();
+        std::cout << secondsToNextHour << " seconds from " << lt->tm_hour << ":" << lt->tm_min << ":" << lt->tm_sec << std::endl;
+        sleep(secondsToNextHour);
     }
 }
 
