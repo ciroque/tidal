@@ -30,8 +30,8 @@ void Application::Run() {
 }
 
 void Application::RegisterSignalHandlers() {
+    signal(SIGTERM, SignalHandler);
     signal(SIGINT, SignalHandler);
-    signal(SIGHUP, SignalHandler);
     signal(SIGKILL, SignalHandler);
 }
 
