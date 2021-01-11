@@ -27,7 +27,9 @@ public:
 private:
     const std::string port = "443";
     const std::string host = "api.tidesandcurrents.noaa.gov";
-    const std::string path = "/api/prod/datagetter?begin_date=20201019&end_date=20201026&product=predictions&datum=mllw&interval=h&format=json&units=english&time_zone=lst_ldt&station=9447130";
+    const std::string rootPath = "/api/prod/datagetter?product=predictions&datum=mllw&interval=h&format=json&units=english&time_zone=lst_ldt&station=9447130&";
+
+    std::string BuildPath();
 };
 
 

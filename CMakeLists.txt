@@ -8,6 +8,7 @@ configure_file(TidalConfig.h.in TidalConfig.h)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(tidal
+        include/nlohmann/json.hpp
         src/main.cpp
         src/app/Application.cpp
         src/app/Application.h
