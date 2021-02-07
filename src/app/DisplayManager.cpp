@@ -3,13 +3,13 @@
 //
 
 #include "DisplayManager.h"
-#include "../graphLib/graphLib.h"
+#include "graphLib.h"
 #include "DisplayData.h"
 
 using namespace boost::adaptors;
 
 void DisplayManager::LoadMoonImages() {
-    fileNames.at(0) = "./New.bmp";
+    fileNames.at(0) = "New.bmp";
     fileNames.at(1) = "WaxingCrescent.bmp";
     fileNames.at(2) = "FirstQuarter.bmp";
     fileNames.at(3) = "WaxingGibbous.bmp";

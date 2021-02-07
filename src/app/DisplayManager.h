@@ -5,7 +5,7 @@
 #ifndef TIDAL_DISPLAYMANAGER_H
 #define TIDAL_DISPLAYMANAGER_H
 
-#include "../graphLib/graphLib.h"
+#include "graphLib.h"
 #include "DisplayData.h"
 
 #include <boost/range/adaptor/indexed.hpp>
