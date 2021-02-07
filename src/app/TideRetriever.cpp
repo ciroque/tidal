@@ -8,16 +8,14 @@
 #include "TideRetriever.h"
 #include "Time.h"
 
-#include "../../include/nlohmann/json.hpp"
+//#include "../../include/nlohmann/json.hpp"
 
 // for convenience
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
-void TideRetriever::Retrieve() {
+std::string TideRetriever::Retrieve() {
     std::cout << "TideRetriever::Retrieve" << std::endl;
-    std::string res = this->Retriever::Retrieve(host, port, this->BuildPath());
-    auto j = json::parse(res);
-    std::cout << j.dump(2) << std::endl;
+    return this->Retriever::Retrieve(host, port, this->BuildPath());
 }
 
 std::string TideRetriever::BuildPath() {

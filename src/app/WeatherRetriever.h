@@ -10,7 +10,7 @@
 
 class WeatherRetriever : Retriever {
 public:
-    void Retrieve();
+    std::string Retrieve();
 
 private:
     const std::string port = "443";
