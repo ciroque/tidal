@@ -5,6 +5,7 @@
 #include "DisplayManager.h"
 #include "graphLib.h"
 #include "DisplayData.h"
+//#define XTESTING
 
 using namespace boost::adaptors;
 
@@ -61,7 +62,11 @@ frameBuf *DisplayManager::FrameBufFromSurface(SDL_Surface *img)
 
 void DisplayManager::CopyBuffer()
 {
+#ifdef XTESTING
+    FILE *frameBuffer = fopen("/tmp/fb", "w");
+#else
     FILE *frameBuffer = fopen("/dev/fb0", "w");
+#endif
     if(!frameBuffer)
         throw("Could not open frameBuffer");
     fwrite(buffer->fb, sizeof(int), buffer->size, frameBuffer);
