@@ -55,8 +55,13 @@ void Application::HourlyUpdate() {
 
         if(!displayData.loaded || displayData.hour == ZERO_HOUR) {
             displayData.lunarData = GetLunarData();
-            tideRetriever.Retrieve(); // TODO: Grab the data and store it in the DisplayData class
-            weatherRetriever.Retrieve();  // TODO: Grab the data and store it in the DisplayData class
+
+            std::string tideData = tideRetriever.Retrieve(); // TODO: Grab the data and store it in the DisplayData class
+            displayData.tideData = TideData::Parse(tideData);
+
+//            std::string weatherData = weatherRetriever.Retrieve();  // TODO: Grab the data and store it in the DisplayData class
+//            displayData.weatherData = WeatherData::Parse(weatherData);
+
             displayData.loaded = true;
         }
 

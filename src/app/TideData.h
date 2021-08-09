@@ -6,7 +6,17 @@
 #define TIDAL_TIDEDATA_H
 
 
+#include <string>
+#include "TimeSeriesDataPoint.h"
+
 class TideData {
+private:
+    std::vector<TimeSeriesDataPoint> tideLevels;
+    float highestTide;
+    float lowestTide;
+
+public:
+    static TideData Parse(const std::string&);
 
 };
 

@@ -84,7 +84,7 @@ void DisplayManager::Render(DisplayData displayData) {
                    phase.index() * channelWidth + channelOffset - (moonImages.at(phase.value().segment)->width / 2),
                    0);
     }
-    drawBigString(buffer, "Mystic Rythms", 384, 384, 0xFF00FF);
+    drawBigString(buffer, "Mystic Rhythms", 384, 384, 0xFF00FF);
     CopyBuffer();
 }
 
