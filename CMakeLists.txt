@@ -43,5 +43,4 @@ target_link_libraries(tidal
     libgraphLib.a
     ssl
     crypto
-    SDL2
 )

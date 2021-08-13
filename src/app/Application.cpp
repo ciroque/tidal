@@ -24,7 +24,6 @@ Application::~Application() = default;
 
 void Application::Run() {
     RegisterSignalHandlers();
-    Application::DisplayMgr.LoadMoonImages();
     std::thread hourly (HourlyUpdate);
     hourly.join();
 }
@@ -38,9 +37,18 @@ void Application::RegisterSignalHandlers() {
 LunarData Application::GetLunarData() {
     LunarData lunarData;
     const int FIRST = 0;
+    time_t ttime = time(0);
+    tm* local_time = localtime(&ttime);
     lunarData.moonPhases.push_back(Lunar::GetMoonPhase());
+    char datestring[100];
+    std::snprintf(datestring, sizeof(datestring), "%d/%d", local_time->tm_mon + 1, local_time->tm_mday);
+    lunarData.moonDates.push_back(datestring);
     for(int i = 1; i < DAYS; i++) {
         lunarData.moonPhases.push_back(Lunar::GetMoonPhase(lunarData.moonPhases.at(FIRST).julianDay + i));
+	local_time->tm_mday++;
+	std::mktime(local_time);	/*Correct time if we go past the end of the month/year*/
+	std::snprintf(datestring, sizeof(datestring), "%d/%d", local_time->tm_mon + 1, local_time->tm_mday);
+	lunarData.moonDates.push_back(datestring);
     }
     return lunarData;
 }
