@@ -24,7 +24,7 @@ TideData TideData::Parse(const std::string& data) {
             entry["t"].get_to(timestamp);
             entry["v"].get_to(value);
 
-            timeSeriesDataPoints.emplace_back(entry["t"], std::stof(value, nullptr));
+            timeSeriesDataPoints.emplace_back(timestamp, std::stof(value, nullptr));
         }
     }
 
