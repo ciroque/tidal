@@ -29,7 +29,9 @@ add_executable(tidal
         src/app/TideData.cpp
         src/app/TideData.h
         src/app/LunarData.cpp
-        src/app/LunarData.h)
+        src/app/LunarData.h
+        src/app/TimeSeriesDataPoint.cpp
+        src/app/TimeSeriesDataPoint.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)

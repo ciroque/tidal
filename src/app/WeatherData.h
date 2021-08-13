@@ -7,7 +7,8 @@
 
 
 class WeatherData {
-
+public:
+    static WeatherData Parse(std::string);
 };
 
 
