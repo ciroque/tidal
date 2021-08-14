@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Application -> DataManager : BuildDisplayData()
+Application <- DataManager : DisplayData
+
+Application -> DisplayManager : Render(DisplayData)
+    loop for each DailyPrediction
+
+
+        group Displaying Lunar Data
+            DisplayManager -> DailyPrediction : lunarData.visible
+            note right: Need to confirm this with Christopher
+            DisplayManager -> graphLib : render
+        end
+
+        group Displaying Tide Data
+            DisplayManager -> DailyPrediction : tideData.highestLevel
+            DisplayManager -> DailyPrediction : tideData.lowestLevel
+            DisplayManager -> DailyPrediction : tidaData.predictions
+            loop for each prediction (TimeSeriesDatum)
+                DisplayManager -> graphLib : render
+            end
+        end
+
+
+        group Displaying Weather Data
+            DisplayManager -> DailyPrediction : weatherData.highTemp
+            DisplayManager -> DailyPrediction : weatherData.lowTemp
+            DisplayManager -> graphLib : render
+        end
+    end
+
+@enduml
