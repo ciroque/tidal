@@ -4,6 +4,16 @@
 autonumber
 
 Application -> DataManager : BuildDisplayData()
+
+DataManager -> LunarRetriever : retrieve
+DataManager <- LunarRetriever : LunarData
+
+DataManager -> TideRetriever : retrieve
+DataManager <- TideRetriever : TideData
+
+DataManager -> WeatherRetriever : retrieve
+DataManager <- WeatherRetriever : WeatherData
+
 Application <- DataManager : DisplayData
 
 Application -> DisplayManager : Render(DisplayData)
