@@ -31,7 +31,15 @@ add_executable(tidal
         src/app/LunarData.cpp
         src/app/LunarData.h
         src/app/TimeSeriesDataPoint.cpp
-        src/app/TimeSeriesDataPoint.h)
+        src/app/TimeSeriesDataPoint.h
+        src/app/config/AppConfig.cpp
+        src/app/config/AppConfig.h
+        src/app/config/WeatherConfig.cpp
+        src/app/config/WeatherConfig.h
+        src/app/config/TideConfig.cpp
+        src/app/config/TideConfig.h
+        src/app/config/ConfigReader.cpp
+        src/app/config/ConfigReader.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)
@@ -45,3 +53,5 @@ target_link_libraries(tidal
     crypto
     SDL2
 )
+
+file(COPY src/tidal.config DESTINATION ${CMAKE_BINARY_DIR})

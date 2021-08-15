@@ -14,18 +14,21 @@
 #include "DisplayData.h"
 
 
-bool Application::stop = false;
+bool stop = false;
 
-DisplayManager Application::DisplayMgr;
+DisplayManager DisplayMgr;
 
-Application::Application() = default;
+Application::Application() {
+    config = AppConfig::Load();
+    stop = false;
+};
 
 Application::~Application() = default;
 
 void Application::Run() {
     RegisterSignalHandlers();
     Application::DisplayMgr.LoadMoonImages();
-    std::thread hourly (HourlyUpdate);
+    std::thread hourly (&Application::HourlyUpdate, this);
     hourly.join();
 }
 
@@ -39,7 +42,7 @@ LunarData Application::GetLunarData() {
     LunarData lunarData;
     const int FIRST = 0;
     lunarData.moonPhases.push_back(Lunar::GetMoonPhase());
-    for(int i = 1; i < DAYS; i++) {
+    for(int i = 1; i < config.getLookAheadDays(); i++) {
         lunarData.moonPhases.push_back(Lunar::GetMoonPhase(lunarData.moonPhases.at(FIRST).julianDay + i));
     }
     return lunarData;

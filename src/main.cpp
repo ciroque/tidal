@@ -6,8 +6,10 @@
 int main() {
     std::cout << "Tidal version " << tidal_VERSION_MAJOR << "." << tidal_VERSION_MINOR << std::endl;
 
+    Application application;
+
     try {
-        Application::Run();
+        application.Run();
     } catch(std::runtime_error& error) {
         std::cerr << error.what();
         return EXIT_FAILURE;
