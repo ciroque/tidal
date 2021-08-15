@@ -49,9 +49,9 @@ void DisplayManager::Render(DisplayData displayData) {
     static int halfChannelWidth = channelWidth / 2;
     static int channelOffset = channelWidth / 2;
     for(const auto& phase : displayData.lunarData.moonPhases | indexed()) {
-	float waning = (phase.value().segment > 3) ? M_PI : 0.0f;	/*Waning rendering occurs at angles above pi*/
 	int xoffset = phase.index() * channelWidth + halfChannelWidth;
-	DrawMoonPhase(xoffset, 90, 50, phase.value().visible * M_PI + waning);
+	if(phase.value().segment < 4) DrawMoonPhase(xoffset, 90, 50, phase.value().visible * M_PI);
+	else  DrawMoonPhase(xoffset, 90, 50, M_PI * 2 - phase.value().visible * M_PI);
 	auto visString = std::to_string(phase.value().visible);
 	int strOff = visString.length() * 5;	/*Pixel length of the string*/
 	drawString(buffer, visString.c_str(), xoffset - strOff, 150, 0x0000FF);
