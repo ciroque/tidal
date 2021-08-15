@@ -14,7 +14,7 @@
 
 class DisplayData {
 public:
-    bool loaded;
+    bool loaded = false;
     unsigned int hour;
     LunarData lunarData;
     WeatherData weatherData;
