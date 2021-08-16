@@ -34,10 +34,6 @@ add_executable(tidal
         src/app/TimeSeriesDataPoint.h
         src/app/config/AppConfig.cpp
         src/app/config/AppConfig.h
-        src/app/config/WeatherConfig.cpp
-        src/app/config/WeatherConfig.h
-        src/app/config/TideConfig.cpp
-        src/app/config/TideConfig.h
         src/app/config/ConfigReader.cpp
         src/app/config/ConfigReader.h)
 

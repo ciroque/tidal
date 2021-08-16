@@ -5,21 +5,18 @@
 #ifndef TIDAL_APPCONFIG_H
 #define TIDAL_APPCONFIG_H
 
-
-#include "WeatherConfig.h"
-#include "TideConfig.h"
 #include "ConfigReader.h"
 
 class AppConfig {
 private:
-    int lookAheadDays = 5;
-    TideConfig tideConfig;
-    WeatherConfig weatherConfig;
+    int lookAheadDays = -0;
+    int tideNoaaStation = -0;
+    std::string weatherNwsOffice = "";
+    int weatherNwsGridX = -0;
+    int weatherNwsGridY = -0;
 
 public:
     [[nodiscard]] inline int getLookAheadDays() const { return lookAheadDays; }
-    inline WeatherConfig getWeatherConfig() { return weatherConfig; }
-    inline TideConfig getTideConfig() { return tideConfig; }
 
     static AppConfig Load()
     {
@@ -34,7 +31,10 @@ public:
         reader->parseFile(path);
 
         reader->getValue("lookAheadDays", config.lookAheadDays);
-
+        reader->getValue("tide.noaa.station", config.tideNoaaStation);
+        reader->getValue("weather.nws.office", config.weatherNwsOffice);
+        reader->getValue("weather.nws.gridX", config.weatherNwsGridX);
+        reader->getValue("weather.nws.gridY", config.weatherNwsGridY);
 
         return config;
     }
