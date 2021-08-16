@@ -4,6 +4,11 @@
 
 #include "AppConfig.h"
 
+AppConfig AppConfig::Load()
+{
+    return Load("tidal.config");
+}
+
 AppConfig AppConfig::Load(std::string path)
 {
     auto config = AppConfig();

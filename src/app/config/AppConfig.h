@@ -11,18 +11,14 @@ class AppConfig {
 private:
     int lookAheadDays = -0;
     int tideNoaaStation = -0;
-    std::string weatherNwsOffice = "";
+    std::string weatherNwsOffice;
     int weatherNwsGridX = -0;
     int weatherNwsGridY = -0;
 
 public:
     [[nodiscard]] inline int getLookAheadDays() const { return lookAheadDays; }
 
-    static AppConfig Load()
-    {
-        return Load("tidal.config");
-    }
-
+    static AppConfig Load();
     static AppConfig Load(std::string path);
 };
 
