@@ -9,7 +9,6 @@
 #include "DisplayData.h"
 
 #include <boost/range/adaptor/indexed.hpp>
-#include <SDL2/SDL.h>
 #include <array>
 #include <lunar.h>
 
@@ -19,15 +18,11 @@ class DisplayManager {
 public:
     DisplayManager();
     void Render(DisplayData displayData);
-    void LoadMoonImages();
 
 private:
-    static const int PHASECOUNT = 8;
-    std::array<std::string, PHASECOUNT> fileNames;
-    std::array<frameBuf*, PHASECOUNT> moonImages{};
     frameBuf *buffer = createBuffer(1024, 768, 32);
 
-    static frameBuf* FrameBufFromSurface(SDL_Surface *img);
+    void DrawMoonPhase(float centerx, float centery, float radius, float phase);
     void CopyBuffer();
 };
 

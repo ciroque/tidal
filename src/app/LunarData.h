@@ -12,6 +12,7 @@
 class LunarData {
 public:
     std::vector<Phase> moonPhases;
+    std::vector<std::string> moonDates;
 };
 
 
