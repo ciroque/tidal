@@ -50,7 +50,7 @@ LunarData Application::GetLunarData() {
 
 void Application::HourlyUpdate() {
     DisplayData displayData;
-    TideRetriever tideRetriever;
+    TideRetriever tideRetriever(&this->config);
     WeatherRetriever weatherRetriever;
     while(!stop) {
         displayData.hour = Time::HoursNow();
