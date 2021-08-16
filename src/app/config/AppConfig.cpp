@@ -18,15 +18,18 @@ AppConfig AppConfig::Load(std::string path)
 
     reader->getValue("lookAheadDays", config.lookAheadDays);
 
-    reader->getValue("tide.station", config.tideStation);
-    reader->getValue("tide.http-port", config.tideHttpPort);
     reader->getValue("tide.http-host", config.tideHttpHost);
+    reader->getValue("tide.http-port", config.tideHttpPort);
+    reader->getValue("tide.http-rootPath", config.tideHttpRootPath);
+    reader->getValue("tide.station", config.tideStation);
     reader->getValue("tide.timezone", config.tideTimezone);
-    reader->getValue("tide.rootPath", config.tideRootPath);
 
-    reader->getValue("weather.nws.office", config.weatherNwsOffice);
-    reader->getValue("weather.nws.gridX", config.weatherNwsGridX);
-    reader->getValue("weather.nws.gridY", config.weatherNwsGridY);
+    reader->getValue("weather.http-host", config.weatherHttpHost);
+    reader->getValue("weather.http-port", config.weatherHttpPort);
+    reader->getValue("weather.http-rootPath", config.weatherHttpRootPath);
+    reader->getValue("weather.office", config.weatherNwsOffice);
+    reader->getValue("weather.gridX", config.weatherNwsGridX);
+    reader->getValue("weather.gridY", config.weatherNwsGridY);
 
     return config;
 }

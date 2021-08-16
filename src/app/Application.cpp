@@ -50,8 +50,8 @@ LunarData Application::GetLunarData() {
 
 void Application::HourlyUpdate() {
     DisplayData displayData;
-    TideRetriever tideRetriever(&this->config);
-    WeatherRetriever weatherRetriever;
+    TideRetriever tideRetriever(&config);
+    WeatherRetriever weatherRetriever(&config);
     while(!stop) {
         displayData.hour = Time::HoursNow();
         std::cout << "HourlyUpdate: hour: " << displayData.hour << std::endl;
@@ -59,11 +59,11 @@ void Application::HourlyUpdate() {
         if(!displayData.loaded || displayData.hour == ZERO_HOUR) {
             displayData.lunarData = GetLunarData();
 
-            std::string tideData = tideRetriever.Retrieve(); // TODO: Grab the data and store it in the DisplayData class
+            std::string tideData = tideRetriever.Retrieve();
             displayData.tideData = TideData::Parse(tideData);
 
-//            std::string weatherData = weatherRetriever.Retrieve();  // TODO: Grab the data and store it in the DisplayData class
-//            displayData.weatherData = WeatherData::Parse(weatherData);
+            std::string weatherData = weatherRetriever.Retrieve();
+            displayData.weatherData = WeatherData::Parse(weatherData);
 
             displayData.loaded = true;
         }

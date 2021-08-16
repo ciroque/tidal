@@ -34,7 +34,7 @@ std::string TideRetriever::BuildPath() {
             + "&time_zone=" + config->getTideTimezone()
             + "&station=" + config->getTideStation();
 
-    return config->getTideRootPath() + params;
+    return config->getTideHttpRootPath() + params;
 }
 
 TideRetriever::TideRetriever(AppConfig *config) {
