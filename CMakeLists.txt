@@ -49,5 +49,3 @@ target_link_libraries(tidal
     crypto
     SDL2
 )
-
-file(COPY src/tidal.config DESTINATION ${CMAKE_BINARY_DIR})
