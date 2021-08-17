@@ -53,7 +53,7 @@ bool ConfigReader::getValue(const std::string &tag, std::string &value) {
     return false;
 }
 
-bool ConfigReader::parseFile(const string &fileName) {
+bool ConfigReader::readConfig(const string &fileName) {
     ifstream inputFile;
     inputFile.open(fileName.c_str());
     string delimeter = "=";

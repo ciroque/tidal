@@ -14,7 +14,7 @@ AppConfig AppConfig::Load(std::string path)
     auto config = AppConfig();
     auto reader = ConfigReader::getInstance();
 
-    reader->parseFile(path);
+    reader->readConfig(path);
 
     reader->getValue("daysToDisplay", config.daysToDisplay);
 
