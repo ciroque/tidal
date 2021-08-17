@@ -25,7 +25,7 @@ std::string TideRetriever::BuildPath() {
     char end[DATE_LENGTH];
 
     strftime(start, DATE_LENGTH, DATE_FORMAT_STRING, local_time);
-    local_time->tm_mday += config->getLookAheadDays();
+    local_time->tm_mday += config->getDaysToDisplay();
     std::mktime(local_time);
     strftime(end, DATE_LENGTH, DATE_FORMAT_STRING, local_time);
 

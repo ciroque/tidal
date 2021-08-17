@@ -9,7 +9,7 @@
 
 class AppConfig {
 private:
-    int lookAheadDays = -0;
+    int daysToDisplay = -0;
 
     std::string tideHttpPort;
     std::string tideHttpHost;
@@ -25,7 +25,7 @@ private:
     std::string weatherNwsGridY;
 
 public:
-    [[nodiscard]] inline int getLookAheadDays() const { return lookAheadDays; }
+    [[nodiscard]] inline int getDaysToDisplay() const { return daysToDisplay; }
 
     [[nodiscard]] inline std::string getTideHttpHost() const { return tideHttpHost; }
     [[nodiscard]] inline std::string getTideHttpPort() const { return tideHttpPort; }

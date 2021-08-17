@@ -17,7 +17,7 @@ public:
     void Run();
 
 private:
-    bool stop{};
+    bool stop = false;
     const unsigned int ZERO_HOUR = 0;
     DisplayManager DisplayMgr;
     AppConfig config;

@@ -16,7 +16,7 @@ AppConfig AppConfig::Load(std::string path)
 
     reader->parseFile(path);
 
-    reader->getValue("lookAheadDays", config.lookAheadDays);
+    reader->getValue("daysToDisplay", config.daysToDisplay);
 
     reader->getValue("tide.http-host", config.tideHttpHost);
     reader->getValue("tide.http-port", config.tideHttpPort);
