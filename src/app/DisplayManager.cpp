@@ -9,55 +9,24 @@
 
 using namespace boost::adaptors;
 
-void DisplayManager::LoadMoonImages() {
-    fileNames.at(0) = "New.bmp";
-    fileNames.at(1) = "WaxingCrescent.bmp";
-    fileNames.at(2) = "FirstQuarter.bmp";
-    fileNames.at(3) = "WaxingGibbous.bmp";
-    fileNames.at(4) = "Full.bmp";
-    fileNames.at(5) = "WaningGibbous.bmp";
-    fileNames.at(6) = "LastQuarter.bmp";
-    fileNames.at(7) = "WaningCrescent.bmp";
-
-    /*Sprite Creation Start*/
-    SDL_Init(SDL_INIT_EVERYTHING);
-    for(const auto& fileName : fileNames | indexed()) {
-        auto *bmp = SDL_LoadBMP(fileName.value().c_str());
-        /*Copy pixel data to sprite buffer*/
-        if(!bmp) {
-            std::string error;
-            error.append("Could not load image: ");
-            error.append(fileName.value());
-            throw std::runtime_error(error);
-        }
-        moonImages.at(fileName.index()) = FrameBufFromSurface(bmp);
-        SDL_FreeSurface(bmp);
-    }
-    /*Sprite Creation End*/
+static inline float CircEquat(float rsqr, float x)
+{
+	return sqrt(rsqr - (x * x));
 }
 
-frameBuf *DisplayManager::FrameBufFromSurface(SDL_Surface *img)
+void DisplayManager::DrawMoonPhase(float centerx, float centery, float radius, float phase)
 {
-    SDL_LockSurface(img);
-    auto *sprite = createBuffer(img->w, img->h, 32);
-    for(int i = 0; i < (img->h * img->w); i++)
-    {
-        if(img->w != img->pitch)
-        {
-            ((Uint8 *)sprite->fb)[4 * i] =
-                    ((Uint8 *)img->pixels)[img->pitch * i / img->w];
-            ((Uint8 *)sprite->fb)[4 * i + 1] =
-                    ((Uint8 *)img->pixels)[img->pitch * i / img->w + 1];
-            ((Uint8 *)sprite->fb)[4 * i + 2] =
-                    ((Uint8 *)img->pixels)[img->pitch * i / img->w + 2];
-        }else{
-            sprite->fb[i] = (unsigned int)((Uint8 *)img->pixels)[i];
-            sprite->fb[i] |= (unsigned int)((Uint8 *)img->pixels)[i] << 8;
-            sprite->fb[i] |= (unsigned int)((Uint8 *)img->pixels)[i] << 16;
-        }
+    float rsquared = radius * radius;
+    float a = tan(phase) * radius;
+    float b = sqrt(rsquared + (a * a));
+    b *= b;
+    float sign = (a >= 0) ? 1.0f : -1.0f;
+    float side = fmod(phase, 2 * M_PI) > M_PI ? -1 : 1;
+    for(int i = -radius; i < radius; i++){
+        float edgex = CircEquat(rsquared, i) * side;
+        float midx = CircEquat(b, i) * sign - a;
+        drawline(buffer, centerx + midx, centery + i, centerx + edgex, centery + i, 0xFFFFFF);
     }
-    SDL_UnlockSurface(img);
-    return sprite;
 }
 
 void DisplayManager::CopyBuffer()
@@ -75,15 +44,23 @@ void DisplayManager::CopyBuffer()
 
 void DisplayManager::Render(DisplayData displayData) {
     LGL_cls(buffer);
-    auto phaseCount = displayData.lunarData.moonPhases.size();
-    int channelWidth = buffer->width / phaseCount;
-    int channelOffset = channelWidth / 2;
+    static auto phaseCount = displayData.lunarData.moonPhases.size();
+    static int channelWidth = buffer->width / phaseCount;
+    static int halfChannelWidth = channelWidth / 2;
+    static int channelOffset = channelWidth / 2;
     for(const auto& phase : displayData.lunarData.moonPhases | indexed()) {
-        copyBitmap(buffer,
-                   moonImages.at(phase.value().segment),
-                   phase.index() * channelWidth + channelOffset - (moonImages.at(phase.value().segment)->width / 2),
-                   0);
+	int xoffset = phase.index() * channelWidth + halfChannelWidth;
+	if(phase.value().segment < 4) DrawMoonPhase(xoffset, 90, 50, phase.value().visible * M_PI);
+	else  DrawMoonPhase(xoffset, 90, 50, M_PI * 2 - phase.value().visible * M_PI);
+	auto visString = std::to_string(phase.value().visible);
+	int strOff = visString.length() * 5;	/*Pixel length of the string*/
+	drawString(buffer, visString.c_str(), xoffset - strOff, 150, 0x0000FF);
+	auto dateString = displayData.lunarData.moonDates.at(phase.index());
+	strOff = dateString.length() * 10;	/*Getting date string*/
+	drawBigString(buffer, dateString.c_str(), xoffset - strOff, 10, 0x0000FF);
+	drawline(buffer, xoffset + halfChannelWidth, 0, xoffset + halfChannelWidth, 165, 0x0000FF);
     }
+    drawline(buffer, 0, 165, buffer->width, 165, 0x0000FF);
     drawBigString(buffer, "Mystic Rhythms", 384, 384, 0xFF00FF);
     CopyBuffer();
 }
