@@ -40,7 +40,7 @@ DisplayData "1" o-- "many" DailyPrediction
 DailyPrediction *-- LunarData
 DailyPrediction *-- TideData
 DailyPrediction *-- WeatherData
-
+TideData "1" o-- "many" TimeSeriesDatum
 
 
 @enduml
