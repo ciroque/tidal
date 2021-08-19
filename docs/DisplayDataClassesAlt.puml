@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class TimeSeriesDatum {
+    timestamp : boost::gregorian::date
+    value : float
+}
+
+class DisplayData {
+    dailyPredictions : std::vector<DailyPrediction>
+    tideData : TideData
+}
+
+class DailyPrediction {
+    date : boost::gregorian::date
+    lunarData : LunarData
+    weatherData : WeatherData
+}
+
+class LunarData {
+    julianDay : int
+    sunPosition : float
+    moonPosition : float
+    visible : float
+    segment : int
+}
+
+class TideData {
+    highestLevel : float
+    lowestLevel : float
+    predictions : std::vector<TimeSeriesDatum>
+}
+
+class WeatherData {
+    highTemp : float
+    lowTemp : float
+}
+
+DisplayData "1" o-- "many" DailyPrediction
+DailyPrediction *-- LunarData
+DisplayData *-- TideData
+DailyPrediction *-- WeatherData
+TideData "1" o-- "many" TimeSeriesDatum
+
+@enduml
