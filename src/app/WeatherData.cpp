@@ -7,8 +7,6 @@
 #include "WeatherData.h"
 
 WeatherData WeatherData::Parse(std::string data) {
-    std::cout << "Raw Weather Data" << std::endl << data;
-
     // root.properties.maxTemperature                   Daily highs
     // root.properties.minTemperature                   Daily lows
     // root.properties.temperature                      Hourly temperatures
