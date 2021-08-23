@@ -16,7 +16,7 @@ private:
     float value;
 public:
     TimeSeriesDataPoint(const std::string&, float);
-    inline float getValue() const { return this->value; }
+    [[nodiscard]] inline float getValue() const { return this->value; }
 };
 
 #endif //TIDAL_TIMESERIESDATAPOINT_H
