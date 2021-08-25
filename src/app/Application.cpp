@@ -13,18 +13,16 @@
 #include "WeatherRetriever.h"
 #include "DisplayData.h"
 
-
-bool Application::stop = false;
-
-DisplayManager Application::DisplayMgr;
-
-Application::Application() = default;
+Application::Application() {
+    config = AppConfig::Load();
+    stop = false;
+};
 
 Application::~Application() = default;
 
 void Application::Run() {
     RegisterSignalHandlers();
-    std::thread hourly (HourlyUpdate);
+    std::thread hourly (&Application::HourlyUpdate, this);
     hourly.join();
 }
 
@@ -43,7 +41,7 @@ LunarData Application::GetLunarData() {
     char datestring[100];
     std::snprintf(datestring, sizeof(datestring), "%d/%d", local_time->tm_mon + 1, local_time->tm_mday);
     lunarData.moonDates.push_back(datestring);
-    for(int i = 1; i < DAYS; i++) {
+    for(int i = 1; i < config.getDaysToDisplay(); i++) {
         lunarData.moonPhases.push_back(Lunar::GetMoonPhase(lunarData.moonPhases.at(FIRST).julianDay + i));
 	local_time->tm_mday++;
 	std::mktime(local_time);	/*Correct time if we go past the end of the month/year*/
@@ -55,8 +53,8 @@ LunarData Application::GetLunarData() {
 
 void Application::HourlyUpdate() {
     DisplayData displayData;
-    TideRetriever tideRetriever;
-    WeatherRetriever weatherRetriever;
+    TideRetriever tideRetriever(&config);
+    WeatherRetriever weatherRetriever(&config);
     while(!stop) {
         displayData.hour = Time::HoursNow();
         std::cout << "HourlyUpdate: hour: " << displayData.hour << std::endl;
@@ -64,11 +62,11 @@ void Application::HourlyUpdate() {
         if(!displayData.loaded || displayData.hour == ZERO_HOUR) {
             displayData.lunarData = GetLunarData();
 
-            std::string tideData = tideRetriever.Retrieve(); // TODO: Grab the data and store it in the DisplayData class
+            std::string tideData = tideRetriever.Retrieve();
             displayData.tideData = TideData::Parse(tideData);
 
-//            std::string weatherData = weatherRetriever.Retrieve();  // TODO: Grab the data and store it in the DisplayData class
-//            displayData.weatherData = WeatherData::Parse(weatherData);
+            std::string weatherData = weatherRetriever.Retrieve();
+            displayData.weatherData = WeatherData::Parse(weatherData);
 
             displayData.loaded = true;
         }

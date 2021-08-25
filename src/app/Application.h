@@ -6,6 +6,7 @@
 #define TIDAL_APPLICATION_H
 
 #include <lunar.h>
+#include <src/app/config/AppConfig.h>
 #include "DisplayManager.h"
 #include "LunarData.h"
 
@@ -13,21 +14,19 @@ class Application {
 public:
     Application();
     ~Application();
-    static void Run();
+    void Run();
 
 private:
-    int period = 7;
-    static bool stop;
-    static const unsigned int ZERO_HOUR = 0;
-    static const int DAYS = 7;
-    static DisplayManager DisplayMgr;
+    bool stop = false;
+    const unsigned int ZERO_HOUR = 0;
+    DisplayManager DisplayMgr;
+    AppConfig config;
 
-    static void DailyUpdate();
-    static LunarData GetLunarData();
-    static void HourlyUpdate();
+    LunarData GetLunarData();
+    void HourlyUpdate();
+
+    static void RegisterSignalHandlers();
     static void SignalHandler(int signum);
-    static void RegisterSignalHandlers() ;
 };
-
 
 #endif //TIDAL_APPLICATION_H
