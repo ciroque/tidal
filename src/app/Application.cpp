@@ -2,6 +2,7 @@
 // Created by Steve Wagner on 9/20/20.
 //
 
+#include <iomanip>
 #include <iostream>
 #include <thread>
 #include <zconf.h>
@@ -74,10 +75,28 @@ void Application::HourlyUpdate() {
         Application::DisplayMgr.Render(displayData);
 
         unsigned int secondsToNextHour = Time::SecondsToNextHour();
-        auto lt = Time::GetLocalTime();
-        std::cout << secondsToNextHour << " seconds from " << lt->tm_hour << ":" << lt->tm_min << ":" << lt->tm_sec << std::endl;
+        displaySecondsToNextUpdate(secondsToNextHour);
         sleep(secondsToNextHour);
     }
+}
+
+void Application::displaySecondsToNextUpdate(unsigned int secondsToNextHour) {
+    auto lt = Time::GetLocalTime();
+    std::cout
+        << secondsToNextHour
+        << " seconds from "
+        << std::setfill('0')
+        << std::setw(2)
+        << lt->tm_hour
+        << ":"
+        << std::setfill('0')
+        << std::setw(2)
+        << lt->tm_min
+        << ":"
+        << std::setfill('0')
+        << std::setw(2)
+        << lt->tm_sec
+        << std::endl;
 }
 
 void Application::SignalHandler(int signum) {
