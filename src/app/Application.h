@@ -23,7 +23,7 @@ private:
     AppConfig config;
 
     LunarData GetLunarData();
-    void HourlyUpdate();
+    [[noreturn]] void HourlyUpdate();
 
     static void RegisterSignalHandlers();
     static void SignalHandler(int signum);

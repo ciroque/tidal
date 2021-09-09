@@ -35,7 +35,9 @@ add_executable(tidal
         src/app/config/AppConfig.cpp
         src/app/config/AppConfig.h
         src/app/config/ConfigReader.cpp
-        src/app/config/ConfigReader.h)
+        src/app/config/ConfigReader.h
+        src/app/retrievers/LunarRetriever.cpp
+        src/app/retrievers/LunarRetriever.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)
