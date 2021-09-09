@@ -12,13 +12,13 @@ add_executable(tidal
         src/main.cpp
         src/app/Application.cpp
         src/app/Application.h
-        src/app/TideRetriever.cpp
-        src/app/TideRetriever.h
-        src/app/WeatherRetriever.cpp
-        src/app/WeatherRetriever.h
+        src/app/retrievers/TideRetriever.cpp
+        src/app/retrievers/TideRetriever.h
+        src/app/retrievers/WeatherRetriever.cpp
+        src/app/retrievers/WeatherRetriever.h
         src/app/Time.cpp src/app/Time.h
-        src/app/Retriever.cpp
-        src/app/Retriever.h
+        src/app/retrievers/Retriever.cpp
+        src/app/retrievers/Retriever.h
         src/app/root_certificates.h
         src/app/DisplayManager.cpp
         src/app/DisplayManager.h

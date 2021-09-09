@@ -9,8 +9,8 @@
 
 #include "Application.h"
 #include "Time.h"
-#include "TideRetriever.h"
-#include "WeatherRetriever.h"
+#include "src/app/retrievers/TideRetriever.h"
+#include "src/app/retrievers/WeatherRetriever.h"
 #include "DisplayData.h"
 
 Application::Application() {
