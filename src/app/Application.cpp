@@ -16,7 +16,6 @@
 
 Application::Application() {
     config = AppConfig::Load();
-    stop = false;
 };
 
 Application::~Application() = default;
