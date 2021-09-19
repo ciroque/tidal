@@ -14,3 +14,5 @@ tidal.cbp
 Makefile
 
 cmake_install.cmake
+
+Testing/

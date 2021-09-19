@@ -21,7 +21,7 @@ private:
     TideData loadTideData();
     WeatherData loadWeatherData();
 
-    TideData extractTideDataForDay(tm date);
+    static TideData extractTideDataForDay(TideData tideData, tm date);
 };
 
 #endif //TIDAL_DATAMANAGER_H

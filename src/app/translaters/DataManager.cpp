@@ -18,20 +18,24 @@ DataManager::DataManager(AppConfig *config) {
 // for that date into the DailyPrediction instance
 DisplayData DataManager::BuildDisplayData() {
     auto displayData = DisplayData();
-    auto today = Time::GetDay();
-
-    // Extract the Lunar data
     auto lunarData = loadLunarData();
-    DailyPrediction dailyPrediction(today);
-    dailyPrediction.lunarData = lunarData.at(0);
+    auto tideData = loadTideData();
 
-    // Extract the Tide data
-    dailyPrediction.tideData = extractTideDataForDay(today);
-    displayData.dailyPredictions.emplace_back(dailyPrediction);
+    for(int i = 0; i < config->getDaysToDisplay(); i++) {
+        auto today = Time::GetDay(i);
 
-    // Extract the Weather data
+        // Extract the Lunar data
+        DailyPrediction dailyPrediction(today);
+        dailyPrediction.lunarData = lunarData.at(i);
 
-    // Set the top-level high and low tide values
+        // Extract the Tide data
+        dailyPrediction.tideData = extractTideDataForDay(tideData, today);
+        displayData.dailyPredictions.emplace_back(dailyPrediction);
+
+        // Extract the Weather data
+
+        // Set the top-level high and low tide values
+    }
 
     return displayData;
 }
@@ -48,8 +52,7 @@ TideData DataManager::loadTideData() {
     return TideData::Parse(tideData);
 }
 
-TideData DataManager::extractTideDataForDay(tm date) {
-    auto tideData = loadTideData();
+TideData DataManager::extractTideDataForDay(TideData tideData, tm date) {
     auto tideLevelsForDay = tideData.TideLevelsForDate(date);
     return TideData(tideLevelsForDay);
 }
