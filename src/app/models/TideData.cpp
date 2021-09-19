@@ -4,10 +4,20 @@
 
 #include <iostream>
 #include <include/nlohmann/json.hpp>
+#include <utility>
 #include "TideData.h"
-#include "TimeSeriesDataPoint.h"
+#include "src/app/TimeSeriesDataPoint.h"
 
 using json = nlohmann::json;
+
+TideData::TideData() {
+    highestTide = 0.0;
+    lowestTide = 0.0;
+}
+
+TideData::TideData(std::vector<TimeSeriesDataPoint> tideLevels) {
+    this->tideLevels = std::move(tideLevels);
+}
 
 // Time-series JSON; t is timestamp, v is value in feet
 TideData TideData::Parse(const std::string& data) {
@@ -37,4 +47,8 @@ TideData TideData::Parse(const std::string& data) {
     tideData.highestTide = std::max_element(timeSeriesDataPoints.begin(), timeSeriesDataPoints.end(), comparator)->getValue();
 
     return tideData;
+}
+
+std::vector<TimeSeriesDataPoint> TideData::TideLevelsForDate(tm date) {
+    return TimeSeriesDataPoint::ValuesForDate(this->tideLevels, date);
 }

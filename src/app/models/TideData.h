@@ -7,17 +7,20 @@
 
 
 #include <string>
-#include "TimeSeriesDataPoint.h"
+#include "src/app/TimeSeriesDataPoint.h"
 
 class TideData {
 private:
     std::vector<TimeSeriesDataPoint> tideLevels;
-    float highestTide;
-    float lowestTide;
+    float highestTide{};
+    float lowestTide{};
 
 public:
+    TideData();
+    explicit TideData(std::vector<TimeSeriesDataPoint> tideLevels);
     static TideData Parse(const std::string&);
 
+    std::vector<TimeSeriesDataPoint> TideLevelsForDate(tm date);
 };
 
 

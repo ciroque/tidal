@@ -8,7 +8,7 @@
 #include <lunar.h>
 #include <src/app/config/AppConfig.h>
 #include "DisplayManager.h"
-#include "LunarData.h"
+#include "src/app/models/LunarData.h"
 
 class Application {
 public:

@@ -4,7 +4,7 @@
 
 #include "DisplayManager.h"
 #include "graphLib.h"
-#include "DisplayData.h"
+#include "src/app/models/DisplayData.h"
 //#define XTESTING
 
 using namespace boost::adaptors;
