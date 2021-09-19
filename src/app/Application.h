@@ -27,6 +27,8 @@ private:
 
     static void RegisterSignalHandlers();
     static void SignalHandler(int signum);
+
+    static void displaySecondsToNextUpdate(unsigned int secondsToNextHour) ;
 };
 
 #endif //TIDAL_APPLICATION_H
