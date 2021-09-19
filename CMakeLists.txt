@@ -12,13 +12,13 @@ add_executable(tidal
         src/main.cpp
         src/app/Application.cpp
         src/app/Application.h
-        src/app/TideRetriever.cpp
-        src/app/TideRetriever.h
-        src/app/WeatherRetriever.cpp
-        src/app/WeatherRetriever.h
+        src/app/retrievers/TideRetriever.cpp
+        src/app/retrievers/TideRetriever.h
+        src/app/retrievers/WeatherRetriever.cpp
+        src/app/retrievers/WeatherRetriever.h
         src/app/Time.cpp src/app/Time.h
-        src/app/Retriever.cpp
-        src/app/Retriever.h
+        src/app/retrievers/Retriever.cpp
+        src/app/retrievers/Retriever.h
         src/app/root_certificates.h
         src/app/DisplayManager.cpp
         src/app/DisplayManager.h
@@ -35,7 +35,9 @@ add_executable(tidal
         src/app/config/AppConfig.cpp
         src/app/config/AppConfig.h
         src/app/config/ConfigReader.cpp
-        src/app/config/ConfigReader.h)
+        src/app/config/ConfigReader.h
+        src/app/retrievers/LunarRetriever.cpp
+        src/app/retrievers/LunarRetriever.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)

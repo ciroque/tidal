@@ -17,13 +17,12 @@ public:
     void Run();
 
 private:
-    bool stop = false;
     const unsigned int ZERO_HOUR = 0;
     DisplayManager DisplayMgr;
     AppConfig config;
 
     LunarData GetLunarData();
-    void HourlyUpdate();
+    [[noreturn]] void HourlyUpdate();
 
     static void RegisterSignalHandlers();
     static void SignalHandler(int signum);

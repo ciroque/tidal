@@ -10,13 +10,13 @@
 
 #include "Application.h"
 #include "Time.h"
-#include "TideRetriever.h"
-#include "WeatherRetriever.h"
+#include "src/app/retrievers/LunarRetriever.h"
+#include "src/app/retrievers/TideRetriever.h"
+#include "src/app/retrievers/WeatherRetriever.h"
 #include "DisplayData.h"
 
 Application::Application() {
     config = AppConfig::Load();
-    stop = false;
 };
 
 Application::~Application() = default;
@@ -52,16 +52,23 @@ LunarData Application::GetLunarData() {
     return lunarData;
 }
 
-void Application::HourlyUpdate() {
+[[noreturn]] void Application::HourlyUpdate() {
     DisplayData displayData;
+    LunarRetriever lunarRetriever(&config);
     TideRetriever tideRetriever(&config);
     WeatherRetriever weatherRetriever(&config);
-    while(!stop) {
+
+    while(true) {
         displayData.hour = Time::HoursNow();
         std::cout << "HourlyUpdate: hour: " << displayData.hour << std::endl;
 
         if(!displayData.loaded || displayData.hour == ZERO_HOUR) {
+
+            // OLD AND BUSTED
             displayData.lunarData = GetLunarData();
+
+            // THE NEW HOTNESS
+            auto lunarData = lunarRetriever.Retrieve();
 
             std::string tideData = tideRetriever.Retrieve();
             displayData.tideData = TideData::Parse(tideData);
