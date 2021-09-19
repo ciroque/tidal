@@ -16,6 +16,7 @@ static inline float CircEquat(float rsqr, float x)
 
 void DisplayManager::DrawMoonPhase(float centerx, float centery, float radius, float phase)
 {
+    radius *= SCALEFACTOR;
     float rsquared = radius * radius;
     float a = tan(phase) * radius;
     float b = sqrt(rsquared + (a * a));
@@ -25,8 +26,11 @@ void DisplayManager::DrawMoonPhase(float centerx, float centery, float radius, f
     for(int i = -radius; i < radius; i++){
         float edgex = CircEquat(rsquared, i) * side;
         float midx = CircEquat(b, i) * sign - a;
-        drawline(buffer, centerx + midx, centery + i, centerx + edgex, centery + i, 0xFFFFFF);
+        drawline(superSample, SUPERAD + midx, SUPERAD + i, SUPERAD + edgex, SUPERAD + i, 0xE0E0E0);
     }
+    scaleBitmap(normalSample, superSample);
+    LGL_cls(superSample);
+    copyBitmap(buffer, normalSample, centerx - MOONRAD, centery - MOONRAD);
 }
 
 void DisplayManager::CopyBuffer()
@@ -50,7 +54,7 @@ void DisplayManager::Render(DisplayData displayData) {
     static int channelOffset = channelWidth / 2;
     for(const auto& phase : displayData.lunarData.moonPhases | indexed()) {
 	int xoffset = phase.index() * channelWidth + halfChannelWidth;
-	if(phase.value().segment < 4) DrawMoonPhase(xoffset, 90, 50, phase.value().visible * M_PI);
+	if(phase.value().segment <= 4) DrawMoonPhase(xoffset, 90, 50, phase.value().visible * M_PI);
 	else  DrawMoonPhase(xoffset, 90, 50, M_PI * 2 - phase.value().visible * M_PI);
 	auto visString = std::to_string(phase.value().visible);
 	int strOff = visString.length() * 5;	/*Pixel length of the string*/

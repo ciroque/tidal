@@ -12,6 +12,11 @@
 #include <array>
 #include <lunar.h>
 
+#define MOONRAD 50
+#define MOONDIA 2 * MOONRAD
+#define SCALEFACTOR 10
+#define SUPERAD MOONRAD * SCALEFACTOR
+
 //using namespace boost::adaptors;
 
 class DisplayManager {
@@ -21,6 +26,8 @@ public:
 
 private:
     frameBuf *buffer = createBuffer(1024, 768, 32);
+    frameBuf *superSample = createBuffer(MOONDIA * SCALEFACTOR, MOONDIA * SCALEFACTOR, 32);
+    frameBuf *normalSample = createBuffer(MOONDIA, MOONDIA, 32);
 
     void DrawMoonPhase(float centerx, float centery, float radius, float phase);
     void CopyBuffer();
