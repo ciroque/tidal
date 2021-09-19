@@ -3,6 +3,12 @@
 //
 
 #include "TimeSeriesDataPoint.h"
+#include "Time.h"
+
+TimeSeriesDataPoint::TimeSeriesDataPoint() {
+    this->timestamp = Time::GetLocalTime();
+    this->value = 0.0;
+}
 
 TimeSeriesDataPoint::TimeSeriesDataPoint(const std::string& timestamp, float value) {
     strptime(timestamp.c_str(), "%Y-%m-%d %H:%M", &this->timestamp);
@@ -20,3 +26,12 @@ std::vector<TimeSeriesDataPoint> TimeSeriesDataPoint::ValuesForDate(std::vector<
 
     return found;
 }
+
+TimeSeriesDataPoint TimeSeriesDataPoint::MinValue(const std::vector<TimeSeriesDataPoint>& vector) {
+    return *std::min_element(vector.begin(), vector.end(), comparator);
+}
+
+TimeSeriesDataPoint TimeSeriesDataPoint::MaxValue(const std::vector<TimeSeriesDataPoint>& vector) {
+    return *std::max_element(vector.begin(), vector.end(), comparator);
+}
+

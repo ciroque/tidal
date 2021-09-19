@@ -12,14 +12,15 @@
 class TideData {
 private:
     std::vector<TimeSeriesDataPoint> tideLevels;
-    float highestTide{};
-    float lowestTide{};
+    TimeSeriesDataPoint highestTideLevel;
+    TimeSeriesDataPoint lowestTideLevel;
 
 public:
     TideData();
     explicit TideData(std::vector<TimeSeriesDataPoint> tideLevels);
-    static TideData Parse(const std::string&);
+    TideData(std::vector<TimeSeriesDataPoint> tideLevels, TimeSeriesDataPoint highestTideLevel, TimeSeriesDataPoint lowestTideLevel);
 
+    static TideData Parse(const std::string&);
     std::vector<TimeSeriesDataPoint> TideLevelsForDate(tm date);
 };
 

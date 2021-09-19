@@ -54,7 +54,9 @@ TideData DataManager::loadTideData() {
 
 TideData DataManager::extractTideDataForDay(TideData tideData, tm date) {
     auto tideLevelsForDay = tideData.TideLevelsForDate(date);
-    return TideData(tideLevelsForDay);
+    TimeSeriesDataPoint highestTideLevel = TimeSeriesDataPoint::MaxValue(tideLevelsForDay);
+    TimeSeriesDataPoint lowestTideLevel = TimeSeriesDataPoint::MinValue(tideLevelsForDay);
+    return {tideLevelsForDay, highestTideLevel, lowestTideLevel};
 }
 
 // TODO: Implementate the parser for the Weather Data...

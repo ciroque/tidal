@@ -10,20 +10,21 @@
 
 using json = nlohmann::json;
 
-TideData::TideData() {
-    highestTide = 0.0;
-    lowestTide = 0.0;
-}
+TideData::TideData() : TideData(std::vector<TimeSeriesDataPoint>()) { }
 
-TideData::TideData(std::vector<TimeSeriesDataPoint> tideLevels) {
+TideData::TideData(std::vector<TimeSeriesDataPoint> tideLevels) :
+    TideData(std::move(tideLevels), TimeSeriesDataPoint(), TimeSeriesDataPoint()) { }
+
+TideData::TideData(std::vector<TimeSeriesDataPoint> tideLevels, TimeSeriesDataPoint highestTideLevel, TimeSeriesDataPoint lowestTideLevel) {
     this->tideLevels = std::move(tideLevels);
+    this->highestTideLevel = highestTideLevel;
+    this->lowestTideLevel = lowestTideLevel;
 }
 
 // Time-series JSON; t is timestamp, v is value in feet
 TideData TideData::Parse(const std::string& data) {
     json j = json::parse(data);
-
-    std::vector<TimeSeriesDataPoint> timeSeriesDataPoints;
+    std::vector<TimeSeriesDataPoint> tideLevels;
 
     for (auto & it : j) {
         for(json::iterator it2 = it.begin(); it2 != it.end(); ++it2) {
@@ -34,21 +35,14 @@ TideData TideData::Parse(const std::string& data) {
             entry["t"].get_to(timestamp);
             entry["v"].get_to(value);
 
-            timeSeriesDataPoints.emplace_back(timestamp, std::stof(value, nullptr));
+            tideLevels.emplace_back(timestamp, std::stof(value, nullptr));
         }
     }
 
-    auto comparator = [](TimeSeriesDataPoint l, TimeSeriesDataPoint r) { return l.getValue() < r.getValue(); };
-
-    auto tideData = TideData();
-
-    tideData.tideLevels = timeSeriesDataPoints;
-    tideData.lowestTide = std::min_element(timeSeriesDataPoints.begin(), timeSeriesDataPoints.end(), comparator)->getValue();
-    tideData.highestTide = std::max_element(timeSeriesDataPoints.begin(), timeSeriesDataPoints.end(), comparator)->getValue();
-
-    return tideData;
+    return TideData(tideLevels);
 }
 
 std::vector<TimeSeriesDataPoint> TideData::TideLevelsForDate(tm date) {
     return TimeSeriesDataPoint::ValuesForDate(this->tideLevels, date);
 }
+
