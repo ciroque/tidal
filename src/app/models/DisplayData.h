@@ -15,6 +15,10 @@
 
 class DisplayData {
 public:
+    DisplayData();
+    DisplayData(std::vector<DailyPrediction> dailyPredictions, TimeSeriesDataPoint highestTideLevel,
+                TimeSeriesDataPoint lowestTideLevel);
+
     bool loaded = false;
     unsigned int hour;
 
@@ -25,6 +29,8 @@ public:
 
     // THE NEW HOTNESS
     std::vector<DailyPrediction> dailyPredictions;
+    TimeSeriesDataPoint highestTideLevel;
+    TimeSeriesDataPoint lowestTideLevel;
 };
 
 

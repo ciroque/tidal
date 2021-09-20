@@ -22,6 +22,10 @@ private:
     WeatherData loadWeatherData();
 
     static TideData extractTideDataForDay(TideData tideData, tm date);
-};
+
+    static TimeSeriesDataPoint findHighestTideLevel(const std::vector<DailyPrediction>& dailyPredictions);
+    static TimeSeriesDataPoint findLowestTideLevel(const std::vector<DailyPrediction>& dailyPredictions);
+
+    };
 
 #endif //TIDAL_DATAMANAGER_H

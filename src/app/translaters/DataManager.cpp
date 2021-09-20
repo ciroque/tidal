@@ -17,9 +17,9 @@ DataManager::DataManager(AppConfig *config) {
 // the data from the various data lists (LunarData, TideData, and WeatherData)
 // for that date into the DailyPrediction instance
 DisplayData DataManager::BuildDisplayData() {
-    auto displayData = DisplayData();
     auto lunarData = loadLunarData();
     auto tideData = loadTideData();
+    std::vector<DailyPrediction> dailyPredictions;
 
     for(int i = 0; i < config->getDaysToDisplay(); i++) {
         auto today = Time::GetDay(i);
@@ -30,14 +30,17 @@ DisplayData DataManager::BuildDisplayData() {
 
         // Extract the Tide data
         dailyPrediction.tideData = extractTideDataForDay(tideData, today);
-        displayData.dailyPredictions.emplace_back(dailyPrediction);
+        dailyPredictions.emplace_back(dailyPrediction);
 
         // Extract the Weather data
 
         // Set the top-level high and low tide values
     }
 
-    return displayData;
+    TimeSeriesDataPoint highestTideLevel = findHighestTideLevel(dailyPredictions);
+    TimeSeriesDataPoint lowestTideLevel = findLowestTideLevel(dailyPredictions);
+
+    return DisplayData(dailyPredictions, highestTideLevel, lowestTideLevel);
 }
 
 std::vector<LunarData> DataManager::loadLunarData() {
@@ -64,4 +67,20 @@ WeatherData DataManager::loadWeatherData() {
     WeatherRetriever weatherRetriever(config);
     std::string weatherData = weatherRetriever.Retrieve();
     return WeatherData::Parse(weatherData);
+}
+
+TimeSeriesDataPoint DataManager::findHighestTideLevel(const std::vector<DailyPrediction>& dailyPredictions) {
+    std::vector<TimeSeriesDataPoint> highestLevels;
+    for(auto dailyPrediction : dailyPredictions) {
+        highestLevels.emplace_back(dailyPrediction.tideData.getHighestTideLevel());
+    }
+    return TimeSeriesDataPoint::MaxValue(highestLevels);
+}
+
+TimeSeriesDataPoint DataManager::findLowestTideLevel(const std::vector<DailyPrediction>& dailyPredictions) {
+    std::vector<TimeSeriesDataPoint> lowestLevels;
+    for(auto dailyPrediction : dailyPredictions) {
+        lowestLevels.emplace_back(dailyPrediction.tideData.getLowestTideLevel());
+    }
+    return TimeSeriesDataPoint::MinValue(lowestLevels);
 }
