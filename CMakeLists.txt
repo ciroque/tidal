@@ -42,11 +42,14 @@ add_executable(tidal
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)
 
-target_link_libraries(tidal PUBLIC /usr/local/lib/liblunarstatic.a pthread)
+target_link_libraries(tidal
+        PUBLIC
+        /usr/local/lib/liblunarstatic.a
+        /usr/local/lib/libgraphlib.a
+        pthread)
 target_link_libraries(tidal
     LINK_PUBLIC
     ${Boost_LIBRARIES}
-    libgraphLib.a
     ssl
     crypto
 )
