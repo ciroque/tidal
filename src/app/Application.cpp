@@ -7,13 +7,14 @@
 #include <thread>
 #include <zconf.h>
 #include <csignal>
+#include <src/app/translaters/DataManager.h>
 
 #include "Application.h"
 #include "Time.h"
 #include "src/app/retrievers/LunarRetriever.h"
 #include "src/app/retrievers/TideRetriever.h"
 #include "src/app/retrievers/WeatherRetriever.h"
-#include "DisplayData.h"
+#include "src/app/models/DisplayData.h"
 
 Application::Application() {
     config = AppConfig::Load();
@@ -58,6 +59,9 @@ LunarData Application::GetLunarData() {
     TideRetriever tideRetriever(&config);
     WeatherRetriever weatherRetriever(&config);
 
+    auto dataManager = DataManager(&config);
+    auto wtf = dataManager.BuildDisplayData();
+
     while(true) {
         displayData.hour = Time::HoursNow();
         std::cout << "HourlyUpdate: hour: " << displayData.hour << std::endl;
@@ -94,15 +98,15 @@ void Application::displaySecondsToNextUpdate(unsigned int secondsToNextHour) {
         << " seconds from "
         << std::setfill('0')
         << std::setw(2)
-        << lt->tm_hour
+        << lt.tm_hour
         << ":"
         << std::setfill('0')
         << std::setw(2)
-        << lt->tm_min
+        << lt.tm_min
         << ":"
         << std::setfill('0')
         << std::setw(2)
-        << lt->tm_sec
+        << lt.tm_sec
         << std::endl;
 }
 

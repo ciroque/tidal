@@ -9,10 +9,10 @@
 
 class Time {
 public:
-    static tm* GetLocalTime();
+    static tm GetLocalTime();
     static unsigned int SecondsToNextHour();
     static unsigned int HoursNow();
+    static tm GetDay(int daysFromToday = 0);
 };
-
 
 #endif //TIDAL_TIME_H

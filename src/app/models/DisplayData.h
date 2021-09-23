@@ -11,14 +11,26 @@
 #include "WeatherData.h"
 #include "TideData.h"
 #include "LunarData.h"
+#include "DailyPrediction.h"
 
 class DisplayData {
 public:
+    DisplayData();
+    DisplayData(std::vector<DailyPrediction> dailyPredictions, TimeSeriesDataPoint highestTideLevel,
+                TimeSeriesDataPoint lowestTideLevel);
+
     bool loaded = false;
     unsigned int hour;
+
+    // OLD AND BUSTED
     LunarData lunarData;
     WeatherData weatherData;
     TideData tideData;
+
+    // THE NEW HOTNESS
+    std::vector<DailyPrediction> dailyPredictions;
+    TimeSeriesDataPoint highestTideLevel;
+    TimeSeriesDataPoint lowestTideLevel;
 };
 
 

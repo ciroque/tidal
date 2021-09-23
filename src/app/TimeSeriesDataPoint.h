@@ -5,18 +5,26 @@
 #ifndef TIDAL_TIMESERIESDATAPOINT_H
 #define TIDAL_TIMESERIESDATAPOINT_H
 
-#include <boost/date_time/gregorian/gregorian_types.hpp>        // DO NOT allow boost to expand beyond this class; this is our interface to boost
-#include <boost/date_time/gregorian/parsers.hpp>
-
 #include <string>
+#include <vector>
 
 class TimeSeriesDataPoint {
 private:
-    boost::gregorian::date timestamp;
+    tm timestamp{};
     float value;
+
+    static inline bool comparator(TimeSeriesDataPoint l, TimeSeriesDataPoint r) { return l.getValue() < r.getValue(); };
+
 public:
+    TimeSeriesDataPoint();
     TimeSeriesDataPoint(const std::string&, float);
+
     [[nodiscard]] inline float getValue() const { return this->value; }
+    [[nodiscard]] inline tm getTimestamp() const { return this->timestamp; }
+
+    static std::vector<TimeSeriesDataPoint> ValuesForDate(std::vector<TimeSeriesDataPoint> vector, tm date);
+    static TimeSeriesDataPoint MinValue(const std::vector<TimeSeriesDataPoint>& vector);
+    static TimeSeriesDataPoint MaxValue(const std::vector<TimeSeriesDataPoint>& vector);
 };
 
 #endif //TIDAL_TIMESERIESDATAPOINT_H
