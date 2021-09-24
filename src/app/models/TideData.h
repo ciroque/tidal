@@ -22,6 +22,7 @@ public:
 
     inline TimeSeriesDataPoint getHighestTideLevel() { return this->highestTideLevel; }
     inline TimeSeriesDataPoint getLowestTideLevel() { return this->lowestTideLevel; }
+    inline std::vector<TimeSeriesDataPoint> getTideLevels() { return this->tideLevels; }
     static TideData Parse(const std::string&);
     std::vector<TimeSeriesDataPoint> TideLevelsForDate(tm date);
 };

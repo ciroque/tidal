@@ -48,24 +48,89 @@ void DisplayManager::CopyBuffer()
 
 void DisplayManager::Render(DisplayData displayData) {
     LGL_cls(buffer);
-    static auto phaseCount = displayData.lunarData.moonPhases.size();
-    static int channelWidth = buffer->width / phaseCount;
-    static int halfChannelWidth = channelWidth / 2;
-    static int channelOffset = channelWidth / 2;
-    for(const auto& phase : displayData.lunarData.moonPhases | indexed()) {
-	int xoffset = phase.index() * channelWidth + halfChannelWidth;
-	if(phase.value().segment <= 4) DrawMoonPhase(xoffset, 90, 50, phase.value().visible * M_PI);
-	else  DrawMoonPhase(xoffset, 90, 50, M_PI * 2 - phase.value().visible * M_PI);
-	auto visString = std::to_string(phase.value().visible);
-	int strOff = visString.length() * 5;	/*Pixel length of the string*/
-	drawString(buffer, visString.c_str(), xoffset - strOff, 150, 0x0000FF);
-	auto dateString = displayData.lunarData.moonDates.at(phase.index());
-	strOff = dateString.length() * 10;	/*Getting date string*/
-	drawBigString(buffer, dateString.c_str(), xoffset - strOff, 10, 0x0000FF);
-	drawline(buffer, xoffset + halfChannelWidth, 0, xoffset + halfChannelWidth, 165, 0x0000FF);
+    static int daysToDisplay = displayData.dailyPredictions.size();	/*How many channels do we need on-screen*/
+    static int channelWidth = buffer->width / daysToDisplay;
+    static int halfChannelWidth = channelWidth / 2;	/*Middle of the channel*/
+    int oldx = -10, oldy = 200;	/*Used for rendering tide level lines*/
+    char stringBuf[64];	/*Buffer for writing strings to*/
+    float curLevel;	/*Current tide level*/
+
+    /*Background rendering*/
+    horizontalLine(buffer, 0, 1024, 170, 0x0000FF);
+    horizontalLine(buffer, 0, 1024, 350, 0x0000FF);
+
+    for(auto prediction : displayData.dailyPredictions | indexed()) {
+	int channelPos = prediction.index() * channelWidth;	/*Current channel position*/
+	int xoffset = channelPos + halfChannelWidth;	/*Middle of current channel*/
+	auto day = prediction.value();	/*Easy accessor*/
+
+	/*Line stuff*/
+	verticalLine(buffer, channelPos, 0, 360, 0x0000FF);
+
+	/*Moon rendering*/
+	if(day.lunarData.segment <= Segment::Full) DrawMoonPhase(xoffset, 90, 50, day.lunarData.visible * M_PI);
+	else DrawMoonPhase(xoffset, 90, 50, M_PI * 2 - day.lunarData.visible * M_PI);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%f", day.lunarData.visible);
+	int strOff = strlen(stringBuf) * 5;	/*Half pixel length for string*/
+	drawString(buffer, stringBuf, xoffset - strOff, 150, 0x0000FF);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%d/%d", day.date.tm_mon, day.date.tm_mday);
+	strOff = strlen(stringBuf) * 10;	/*Half pixel length for big string*/
+	drawBigString(buffer, stringBuf, xoffset - strOff, 10, 0x0000FF);
+
+	/*Tide rendering*/
+	auto tideLevels = day.tideData.getTideLevels();
+	float tidePointSpacing = (float)channelWidth / (float)tideLevels.size();
+	float highTide = day.tideData.getHighestTideLevel().getValue();
+	float lowTide = day.tideData.getLowestTideLevel().getValue();
+	auto highTime = day.tideData.getHighestTideLevel().getTimestamp();
+	auto lowTime = day.tideData.getLowestTideLevel().getTimestamp();
+	for(auto tdat : tideLevels | indexed()) {
+	    auto tideData = tdat.value();	/*Easy accessor*/
+	    float level = tideData.getValue();
+	    auto time = tideData.getTimestamp();
+	    int ypoint = 340 - level * 10;	/*Y coord of tide level on-screen*/
+	    int xpoint = channelPos + tidePointSpacing * tdat.index();	/*Same as above but for x*/
+	    drawline(buffer, oldx, oldy, xpoint, ypoint, 0x8080FF);
+	    oldx = xpoint; oldy = ypoint;	/*Update old coords*/
+	    verticalLine(buffer, xpoint, 350, 360, 0x0000FF);	/*Hourly tick mark*/
+	    if(level == highTide) {	/*High tide tick*/
+	    	verticalLine(buffer, xpoint, 360, ypoint, 0x00FF00);
+	    }else if(level == lowTide) {	/*Low tide tick*/
+	    	verticalLine(buffer, xpoint, 360, ypoint, 0xFF0000);
+	    }
+	    if((prediction.index() == 0) && (time.tm_hour = displayData.hour))
+		    curLevel = level;
+	}
+	/*Prints highest tide level and time*/
+	std::snprintf(stringBuf, sizeof(stringBuf), "high @ %02d00:", highTime.tm_hour);
+	drawString(buffer, stringBuf, channelPos + 5, 175, 0x0000FF);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.3f feet", highTide);
+	drawString(buffer, stringBuf, channelPos + 5, 185, 0x0000FF);
+
+	/*Prints lowest tide level and time*/
+	std::snprintf(stringBuf, sizeof(stringBuf), "low @ %02d00:", lowTime.tm_hour);
+	drawString(buffer, stringBuf, channelPos + 5, 200, 0x0000FF);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.3f feet", lowTide);
+	drawString(buffer, stringBuf, channelPos + 5, 210, 0x0000FF);
     }
-    drawline(buffer, 0, 165, buffer->width, 165, 0x0000FF);
-    drawBigString(buffer, "Mystic Rhythms", 384, 384, 0xFF00FF);
+
+    /*Render current tide mark and print level*/
+    auto curTideLevels = displayData.dailyPredictions.at(0).tideData.getTideLevels();
+    float xoffset = (float)(displayData.hour * channelWidth) / curTideLevels.size();
+
+    /*Draws yellow arrow pointing at current tide*/
+    verticalLine(buffer, xoffset, 365, 380, 0xFFFF00);
+    drawline(buffer, xoffset, 365, xoffset + 5, 370, 0xFFFF00);
+    drawline(buffer, xoffset, 365, xoffset - 5, 370, 0xFFFF00);
+
+    /*Prints current level*/
+    std::snprintf(stringBuf, sizeof(stringBuf), "cur: %.3f\'", curLevel);
+    int strOff = strlen(stringBuf) * 5;
+    strOff = xoffset < strOff ? xoffset - 5 : strOff;
+    drawString(buffer, stringBuf, xoffset - strOff, 385, 0x0000FF);
+
+    drawBigString(buffer, "Mystic Rhythms", 2, 750, 0xFF00FF);
+
     CopyBuffer();
 }
 

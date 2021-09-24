@@ -22,12 +22,6 @@ public:
     bool loaded = false;
     unsigned int hour;
 
-    // OLD AND BUSTED
-    LunarData lunarData;
-    WeatherData weatherData;
-    TideData tideData;
-
-    // THE NEW HOTNESS
     std::vector<DailyPrediction> dailyPredictions;
     TimeSeriesDataPoint highestTideLevel;
     TimeSeriesDataPoint lowestTideLevel;
