@@ -98,7 +98,7 @@ void DisplayManager::Render(DisplayData displayData) {
 	    }else if(level == lowTide) {	/*Low tide tick*/
 	    	verticalLine(buffer, xpoint, 360, ypoint, 0xFF0000);
 	    }
-	    if((prediction.index() == 0) && (time.tm_hour = displayData.hour))
+	    if((prediction.index() == 0) && (time.tm_hour == displayData.hour))
 		    curLevel = level;
 	}
 	/*Prints highest tide level and time*/
