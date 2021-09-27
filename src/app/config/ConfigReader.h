@@ -26,7 +26,7 @@ public:
     static ConfigReader *getInstance();
 
     // Parse the config file.
-    bool readConfig(const std::string& fileName = "/tmp/default_config");
+    bool readConfig(const std::string& filename = "/tmp/default_config");
 
     // Overloaded getValue() function.
     // Value of the tag in configuration file could be

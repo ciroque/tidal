@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include "ConfigReader.h"
+#include "ConfigFileNotFoundException.h"
 
 using namespace std;
 
@@ -53,15 +54,14 @@ bool ConfigReader::getValue(const std::string &tag, std::string &value) {
     return false;
 }
 
-bool ConfigReader::readConfig(const string &fileName) {
+bool ConfigReader::readConfig(const string &filename) {
     ifstream inputFile;
-    inputFile.open(fileName.c_str());
+    inputFile.open(filename.c_str());
     string delimeter = "=";
     int initPos = 0;
 
     if (inputFile.fail()) {
-        cout << "Unable to find defaultConfig file" << endl;
-        return false;
+        throw ConfigFileNotFoundException(filename);
     }
 
     string line;

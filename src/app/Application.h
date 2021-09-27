@@ -15,6 +15,7 @@ public:
     Application();
     ~Application();
     void Run();
+    void LoadConfig();
 
 private:
     const unsigned int ZERO_HOUR = 0;

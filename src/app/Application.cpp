@@ -16,16 +16,19 @@
 #include "src/app/retrievers/WeatherRetriever.h"
 #include "src/app/models/DisplayData.h"
 
-Application::Application() {
-    config = AppConfig::Load();
-};
+Application::Application() = default;
 
 Application::~Application() = default;
 
 void Application::Run() {
+    LoadConfig();
     RegisterSignalHandlers();
     std::thread hourly (&Application::HourlyUpdate, this);
     hourly.join();
+}
+
+void Application::LoadConfig() {
+    this->config = AppConfig::Load();
 }
 
 void Application::RegisterSignalHandlers() {
