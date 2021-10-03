@@ -5,6 +5,7 @@
 #include "DisplayManager.h"
 #include "graphLib.h"
 #include "src/app/models/DisplayData.h"
+#include "FrameBufferOpenException.h"
 //#define XTESTING
 
 using namespace boost::adaptors;
@@ -35,13 +36,17 @@ void DisplayManager::DrawMoonPhase(float centerx, float centery, float radius, f
 
 void DisplayManager::CopyBuffer()
 {
+    const std::string FrameBufferName = "/dev/fb0";
+
 #ifdef XTESTING
     FILE *frameBuffer = fopen("/tmp/fb", "w");
 #else
-    FILE *frameBuffer = fopen("/dev/fb0", "w");
+    FILE *frameBuffer = fopen(FrameBufferName.c_str(), "w");
 #endif
-    if(!frameBuffer)
-        throw("Could not open frameBuffer");
+    if(frameBuffer == nullptr) {
+        throw FrameBufferOpenException(FrameBufferName);
+    }
+
     fwrite(buffer->fb, sizeof(int), buffer->size, frameBuffer);
     fclose(frameBuffer);
 }
