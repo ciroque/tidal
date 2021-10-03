@@ -57,6 +57,7 @@ void DisplayManager::Render(DisplayData displayData) {
 
     /*Background rendering*/
     horizontalLine(buffer, 0, 1024, 170, 0x0000FF);
+    horizontalLine(buffer, 0, 1024, 222, 0x0000FF);
     horizontalLine(buffer, 0, 1024, 350, 0x0000FF);
 
     for(auto prediction : displayData.dailyPredictions | indexed()) {
@@ -91,11 +92,16 @@ void DisplayManager::Render(DisplayData displayData) {
 	    int xpoint = channelPos + tidePointSpacing * tdat.index();	/*Same as above but for x*/
 	    drawline(buffer, oldx, oldy, xpoint, ypoint, 0x8080FF);
 	    oldx = xpoint; oldy = ypoint;	/*Update old coords*/
-	    verticalLine(buffer, xpoint, 350, 360, 0x0000FF);	/*Hourly tick mark*/
+	    if(time.tm_hour == 6  |
+	       time.tm_hour == 12 |
+	       time.tm_hour == 18)
+		    verticalLine(buffer, xpoint, 350, 222, 0x000060);
+	    int bottom = (time.tm_hour % 6) == 0 ? 370 : 360;
+	    verticalLine(buffer, xpoint, 350, bottom, 0x0000FF);	/*Hourly tick mark*/
 	    if(level == highTide) {	/*High tide tick*/
-	    	verticalLine(buffer, xpoint, 360, ypoint, 0x00FF00);
+		verticalLine(buffer, xpoint, bottom, ypoint, 0x00FF00);
 	    }else if(level == lowTide) {	/*Low tide tick*/
-	    	verticalLine(buffer, xpoint, 360, ypoint, 0xFF0000);
+		verticalLine(buffer, xpoint, bottom, ypoint, 0xFF0000);
 	    }
 	    if((prediction.index() == 0) && (time.tm_hour == displayData.hour))
 		    curLevel = level;
@@ -116,15 +122,15 @@ void DisplayManager::Render(DisplayData displayData) {
     float xoffset = (float)(displayData.hour * channelWidth) / curTideLevels.size();
 
     /*Draws yellow arrow pointing at current tide*/
-    verticalLine(buffer, xoffset, 365, 380, 0xFFFF00);
-    drawline(buffer, xoffset, 365, xoffset + 5, 370, 0xFFFF00);
-    drawline(buffer, xoffset, 365, xoffset - 5, 370, 0xFFFF00);
+    verticalLine(buffer, xoffset, 375, 390, 0xFFFF00);
+    drawline(buffer, xoffset, 375, xoffset + 5, 380, 0xFFFF00);
+    drawline(buffer, xoffset, 375, xoffset - 5, 380, 0xFFFF00);
 
     /*Prints current level*/
     std::snprintf(stringBuf, sizeof(stringBuf), "cur: %.3f\'", curLevel);
     int strOff = strlen(stringBuf) * 5;
     strOff = xoffset < strOff ? xoffset - 5 : strOff;
-    drawString(buffer, stringBuf, xoffset - strOff, 385, 0x0000FF);
+    drawString(buffer, stringBuf, xoffset - strOff, 395, 0x0000FF);
 
     drawBigString(buffer, "Mystic Rhythms", 2, 750, 0xFF00FF);
 
