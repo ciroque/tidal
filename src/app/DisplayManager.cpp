@@ -68,8 +68,7 @@ void DisplayManager::Render(DisplayData displayData) {
 	verticalLine(buffer, channelPos, 0, 360, 0x0000FF);
 
 	/*Moon rendering*/
-	if(day.lunarData.segment <= Segment::Full) DrawMoonPhase(xoffset, 90, 50, day.lunarData.visible * M_PI);
-	else DrawMoonPhase(xoffset, 90, 50, M_PI * 2 - day.lunarData.visible * M_PI);
+	DrawMoonPhase(xoffset, 90, 50, M_PI * 2 * day.lunarData.phase);
 	std::snprintf(stringBuf, sizeof(stringBuf), "%f", day.lunarData.visible);
 	int strOff = strlen(stringBuf) * 5;	/*Half pixel length for string*/
 	drawString(buffer, stringBuf, xoffset - strOff, 150, 0x0000FF);
