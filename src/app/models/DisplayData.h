@@ -19,7 +19,6 @@ public:
     DisplayData(std::vector<DailyPrediction> dailyPredictions, TimeSeriesDataPoint highestTideLevel,
                 TimeSeriesDataPoint lowestTideLevel);
 
-    bool loaded = false;
     unsigned int hour;
 
     std::vector<DailyPrediction> dailyPredictions;
