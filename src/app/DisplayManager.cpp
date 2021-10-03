@@ -101,15 +101,13 @@ void DisplayManager::Render(DisplayData displayData) {
 		    curLevel = level;
 	}
 	/*Prints highest tide level and time*/
-	std::snprintf(stringBuf, sizeof(stringBuf), "high @ %02d00:", highTime.tm_hour);
-	drawString(buffer, stringBuf, channelPos + 5, 175, 0x0000FF);
-	std::snprintf(stringBuf, sizeof(stringBuf), "%.3f feet", highTide);
+	drawString(buffer, "high:", channelPos + 5, 175, 0x0000FF);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.3f' @ %02d00", highTide, highTime.tm_hour);
 	drawString(buffer, stringBuf, channelPos + 5, 185, 0x0000FF);
 
 	/*Prints lowest tide level and time*/
-	std::snprintf(stringBuf, sizeof(stringBuf), "low @ %02d00:", lowTime.tm_hour);
-	drawString(buffer, stringBuf, channelPos + 5, 200, 0x0000FF);
-	std::snprintf(stringBuf, sizeof(stringBuf), "%.3f feet", lowTide);
+	drawString(buffer, "low:", channelPos + 5, 200, 0x0000FF);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.3f' @ %02d00", lowTide, lowTime.tm_hour);
 	drawString(buffer, stringBuf, channelPos + 5, 210, 0x0000FF);
     }
 
