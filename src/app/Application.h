@@ -22,7 +22,7 @@ private:
     DisplayManager DisplayMgr;
     AppConfig config;
 
-    [[noreturn]] void HourlyUpdate();
+    void HourlyUpdate();
 
     static void RegisterSignalHandlers();
     static void SignalHandler(int signum);

@@ -14,6 +14,7 @@ private:
 
 public:
     explicit ConfigFileNotFoundException(const std::string& filename);
+
     [[nodiscard]] const char * what() const noexcept override {
         return this->errorMessage.c_str();
     }

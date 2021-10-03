@@ -37,17 +37,22 @@ void Application::RegisterSignalHandlers() {
     signal(SIGKILL, SignalHandler);
 }
 
-[[noreturn]] void Application::HourlyUpdate() {
-    auto dataManager = DataManager(&config);
-    while(true) {
-        auto displayData = dataManager.BuildDisplayData();
-        LogHourlyUpdateToConsole(displayData);
+void Application::HourlyUpdate() {
+    try {
+        auto dataManager = DataManager(&config);
 
-        Application::DisplayMgr.Render(displayData);
+        while(true) {
+            auto displayData = dataManager.BuildDisplayData();
+            LogHourlyUpdateToConsole(displayData);
 
-        unsigned int secondsToNextHour = Time::SecondsToNextHour();
-        DisplaySecondsToNextUpdate(secondsToNextHour);
-        sleep(secondsToNextHour);
+            Application::DisplayMgr.Render(displayData);
+
+            unsigned int secondsToNextHour = Time::SecondsToNextHour();
+            DisplaySecondsToNextUpdate(secondsToNextHour);
+            sleep(secondsToNextHour);
+        }
+    } catch(std::exception& ex) {
+        std::cout << "EXCEPTION: " << ex.what() << std::endl;
     }
 }
 

@@ -12,12 +12,12 @@ int main() {
     try {
         application.Run();
 
-    } catch (ConfigFileNotFoundException& ex) {
-        std::cout << "EXCEPTION: " << ex.what();
+    } catch(std::exception& ex) {
+        std::cout << "std::exception: " << ex.what() << std::endl;
         return EXIT_FAILURE;
 
-    } catch(std::runtime_error& error) {
-        std::cerr << "EXCEPTION: " << error.what();
+    } catch(...) {
+        std::cout << "CATCH ALL THE THINGS:" << std::endl;
         return EXIT_FAILURE;
     }
 
