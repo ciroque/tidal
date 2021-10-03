@@ -69,7 +69,7 @@ void DisplayManager::Render(DisplayData displayData) {
 
 	/*Moon rendering*/
 	DrawMoonPhase(xoffset, 90, 50, M_PI * 2 * day.lunarData.phase);
-	std::snprintf(stringBuf, sizeof(stringBuf), "%f", day.lunarData.visible);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.2f%%", day.lunarData.visible * 100.0f);
 	int strOff = strlen(stringBuf) * 5;	/*Half pixel length for string*/
 	drawString(buffer, stringBuf, xoffset - strOff, 150, 0x0000FF);
 	std::snprintf(stringBuf, sizeof(stringBuf), "%d/%d", day.date.tm_mon, day.date.tm_mday);
