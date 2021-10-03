@@ -10,20 +10,13 @@
 
 class LunarData {
 public:
-
-    // OLD AND BUSTED
     LunarData();
-    std::vector<Phase> moonPhases;
-    std::vector<std::string> moonDates;
-
-    // THE NEW HOTNESS
     explicit LunarData(Phase);
 
     int julianDay{};
-    double sunPosition{};
-    double moonPosition{};
-    double visible{};
+    double phase{};
     Segment segment;
+    double visible{};
 };
 
 

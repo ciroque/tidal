@@ -4,20 +4,16 @@
 
 #include "LunarData.h"
 
-// OLD AND BUSTED
 LunarData::LunarData() {
     this->julianDay = 0;
-    this->moonPosition = 0;
+    this->phase = 0.0;
     this->segment = Segment::New;
-    this->sunPosition = 0;
     this->visible = 0;
 }
 
-// THE NEW HOTNESS
 LunarData::LunarData(Phase phase) {
     this->julianDay = phase.julianDay;
-    this->moonPosition = phase.moonPosition;
+    this->phase = phase.phase;
     this->segment = phase.segment;
-    this->sunPosition = phase.sunPosition;
     this->visible = phase.visible;
 }
