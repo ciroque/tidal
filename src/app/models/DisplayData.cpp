@@ -5,6 +5,7 @@
 #include "DisplayData.h"
 
 #include <utility>
+#include <src/app/Time.h>
 
 DisplayData::DisplayData() : DisplayData(
 std::vector<DailyPrediction>(),
@@ -16,4 +17,5 @@ DisplayData::DisplayData(std::vector<DailyPrediction> dailyPredictions, TimeSeri
     this->dailyPredictions = std::move(dailyPredictions);
     this->highestTideLevel = highestTideLevel;
     this->lowestTideLevel = lowestTideLevel;
+    this->hour = Time::HoursNow();
 }
