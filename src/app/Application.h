@@ -22,13 +22,14 @@ private:
     DisplayManager DisplayMgr;
     AppConfig config;
 
-    LunarData GetLunarData();
     [[noreturn]] void HourlyUpdate();
 
     static void RegisterSignalHandlers();
     static void SignalHandler(int signum);
 
-    static void displaySecondsToNextUpdate(unsigned int secondsToNextHour) ;
+    static void DisplaySecondsToNextUpdate(unsigned int secondsToNextHour) ;
+
+    static void LogHourlyUpdateToConsole(const DisplayData &displayData) ;
 };
 
 #endif //TIDAL_APPLICATION_H

@@ -38,32 +38,24 @@ void Application::RegisterSignalHandlers() {
 }
 
 [[noreturn]] void Application::HourlyUpdate() {
-    DisplayData displayData;
-    LunarRetriever lunarRetriever(&config);
-    TideRetriever tideRetriever(&config);
-    WeatherRetriever weatherRetriever(&config);
-
     auto dataManager = DataManager(&config);
     while(true) {
-        auto curhour = Time::HoursNow();
-        std::cout << "HourlyUpdate: hour: " << curhour << std::endl;
-
-        if(!displayData.loaded || curhour == ZERO_HOUR) {
-	    displayData = dataManager.BuildDisplayData();
-            displayData.loaded = true;
-        }
-
-	displayData.hour = curhour;
+        auto displayData = dataManager.BuildDisplayData();
+        LogHourlyUpdateToConsole(displayData);
 
         Application::DisplayMgr.Render(displayData);
 
         unsigned int secondsToNextHour = Time::SecondsToNextHour();
-        displaySecondsToNextUpdate(secondsToNextHour);
+        DisplaySecondsToNextUpdate(secondsToNextHour);
         sleep(secondsToNextHour);
     }
 }
 
-void Application::displaySecondsToNextUpdate(unsigned int secondsToNextHour) {
+void Application::LogHourlyUpdateToConsole(const DisplayData &displayData) {
+    std::cout << "HourlyUpdate: hour: " << displayData.hour << std::endl;
+}
+
+void Application::DisplaySecondsToNextUpdate(unsigned int secondsToNextHour) {
     auto lt = Time::GetLocalTime();
     std::cout
         << secondsToNextHour

@@ -40,7 +40,10 @@ DisplayData DataManager::BuildDisplayData() {
     TimeSeriesDataPoint highestTideLevel = findHighestTideLevel(dailyPredictions);
     TimeSeriesDataPoint lowestTideLevel = findLowestTideLevel(dailyPredictions);
 
-    return DisplayData(dailyPredictions, highestTideLevel, lowestTideLevel);
+    return DisplayData(
+            dailyPredictions,
+            highestTideLevel,
+            lowestTideLevel);
 }
 
 std::vector<LunarData> DataManager::loadLunarData() {
