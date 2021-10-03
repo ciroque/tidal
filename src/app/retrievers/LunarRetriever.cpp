@@ -11,12 +11,12 @@ LunarRetriever::LunarRetriever(AppConfig *config) {
 std::vector<LunarData> LunarRetriever::Retrieve() {
     auto data = std::vector<LunarData>();
 
-    auto firstMoonPhase = LunarData(Lunar::GetMoonPhase());
+    auto firstMoonPhase = LunarData(Lunar::CalculateMoonPhase());
     data.push_back(firstMoonPhase);
 
     for(int i = 1; i < config->getDaysToDisplay(); i++) {
         int nextJulianDay = firstMoonPhase.julianDay + i;
-        auto nextMoonPhase = LunarData(Lunar::GetMoonPhase(nextJulianDay));
+        auto nextMoonPhase = LunarData(Lunar::CalculateMoonPhase(nextJulianDay));
         data.push_back(nextMoonPhase);
     }
 
