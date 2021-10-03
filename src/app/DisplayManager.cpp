@@ -72,7 +72,7 @@ void DisplayManager::Render(DisplayData displayData) {
 	std::snprintf(stringBuf, sizeof(stringBuf), "%f", day.lunarData.visible);
 	int strOff = strlen(stringBuf) * 5;	/*Half pixel length for string*/
 	drawString(buffer, stringBuf, xoffset - strOff, 150, 0x0000FF);
-	std::snprintf(stringBuf, sizeof(stringBuf), "%d/%d", day.date.tm_mon, day.date.tm_mday);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%d/%d", day.date.tm_mon + 1, day.date.tm_mday);
 	strOff = strlen(stringBuf) * 10;	/*Half pixel length for big string*/
 	drawBigString(buffer, stringBuf, xoffset - strOff, 10, 0x0000FF);
 
