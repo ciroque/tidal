@@ -17,5 +17,5 @@ DisplayData::DisplayData(std::vector<DailyPrediction> dailyPredictions, TimeSeri
     this->dailyPredictions = std::move(dailyPredictions);
     this->highestTideLevel = highestTideLevel;
     this->lowestTideLevel = lowestTideLevel;
-    this->hour = Time::HoursNow();;
+    this->hour = Time::HoursNow();
 }
