@@ -41,7 +41,9 @@ add_executable(tidal
         src/app/translaters/DataManager.cpp
         src/app/translaters/DataManager.h
         src/app/models/DailyPrediction.cpp
-        src/app/models/DailyPrediction.h)
+        src/app/models/DailyPrediction.h
+        src/app/config/ConfigFileNotFoundException.cpp
+        src/app/config/ConfigFileNotFoundException.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)
