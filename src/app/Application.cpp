@@ -37,25 +37,6 @@ void Application::RegisterSignalHandlers() {
     signal(SIGKILL, SignalHandler);
 }
 
-LunarData Application::GetLunarData() {
-    LunarData lunarData;
-    const int FIRST = 0;
-    time_t ttime = time(0);
-    tm* local_time = localtime(&ttime);
-    lunarData.moonPhases.push_back(Lunar::GetMoonPhase());
-    char datestring[100];
-    std::snprintf(datestring, sizeof(datestring), "%d/%d", local_time->tm_mon + 1, local_time->tm_mday);
-    lunarData.moonDates.push_back(datestring);
-    for(int i = 1; i < config.getDaysToDisplay(); i++) {
-        lunarData.moonPhases.push_back(Lunar::GetMoonPhase(lunarData.moonPhases.at(FIRST).julianDay + i));
-	local_time->tm_mday++;
-	std::mktime(local_time);	/*Correct time if we go past the end of the month/year*/
-	std::snprintf(datestring, sizeof(datestring), "%d/%d", local_time->tm_mon + 1, local_time->tm_mday);
-	lunarData.moonDates.push_back(datestring);
-    }
-    return lunarData;
-}
-
 [[noreturn]] void Application::HourlyUpdate() {
     DisplayData displayData;
     LunarRetriever lunarRetriever(&config);
@@ -63,28 +44,16 @@ LunarData Application::GetLunarData() {
     WeatherRetriever weatherRetriever(&config);
 
     auto dataManager = DataManager(&config);
-    auto wtf = dataManager.BuildDisplayData();
-
     while(true) {
-        displayData.hour = Time::HoursNow();
-        std::cout << "HourlyUpdate: hour: " << displayData.hour << std::endl;
+        auto curhour = Time::HoursNow();
+        std::cout << "HourlyUpdate: hour: " << curhour << std::endl;
 
-        if(!displayData.loaded || displayData.hour == ZERO_HOUR) {
-
-            // OLD AND BUSTED
-            displayData.lunarData = GetLunarData();
-
-            // THE NEW HOTNESS
-            auto lunarData = lunarRetriever.Retrieve();
-
-            std::string tideData = tideRetriever.Retrieve();
-            displayData.tideData = TideData::Parse(tideData);
-
-            std::string weatherData = weatherRetriever.Retrieve();
-            displayData.weatherData = WeatherData::Parse(weatherData);
-
+        if(!displayData.loaded || curhour == ZERO_HOUR) {
+	    displayData = dataManager.BuildDisplayData();
             displayData.loaded = true;
         }
+
+	displayData.hour = curhour;
 
         Application::DisplayMgr.Render(displayData);
 

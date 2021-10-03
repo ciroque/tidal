@@ -51,7 +51,7 @@ target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/inclu
 target_link_libraries(tidal
         PUBLIC
         /usr/local/lib/liblunarstatic.a
-        /usr/local/lib/libgraphlib.a
+        /usr/local/lib/libgraphLib.a
         pthread)
 target_link_libraries(tidal
     LINK_PUBLIC
