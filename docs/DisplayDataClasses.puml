@@ -14,7 +14,7 @@ class DailyPrediction {
     date : boost::gregorian::date
     lunarData : LunarData
     tideData : TideData
-    weatherData : WeatherData
+    weatherData : AggregateWeatherData
 }
 
 class LunarData {
@@ -31,7 +31,7 @@ class TideData {
     predictions : std::vector<TimeSeriesDatum>
 }
 
-class WeatherData {
+class AggregateWeatherData {
     highTemp : float
     lowTemp : float
 }
@@ -39,7 +39,7 @@ class WeatherData {
 DisplayData "1" o-- "many" DailyPrediction
 DailyPrediction *-- LunarData
 DailyPrediction *-- TideData
-DailyPrediction *-- WeatherData
+DailyPrediction *-- AggregateWeatherData
 TideData "1" o-- "many" TimeSeriesDatum
 
 

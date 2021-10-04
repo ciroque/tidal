@@ -24,8 +24,8 @@ add_executable(tidal
         src/app/DisplayManager.h
         src/app/models/DisplayData.cpp
         src/app/models/DisplayData.h
-        src/app/models/WeatherData.cpp
-        src/app/models/WeatherData.h
+        src/app/models/AggregateWeatherData.cpp
+        src/app/models/AggregateWeatherData.h
         src/app/models/TideData.cpp
         src/app/models/TideData.h
         src/app/models/LunarData.cpp

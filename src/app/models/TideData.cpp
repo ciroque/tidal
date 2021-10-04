@@ -2,10 +2,10 @@
 // Created by swagner on 10/4/20.
 //
 
-#include <iostream>
 #include <include/nlohmann/json.hpp>
 #include <utility>
 #include "TideData.h"
+
 #include "src/app/TimeSeriesDataPoint.h"
 
 using json = nlohmann::json;

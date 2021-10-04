@@ -10,7 +10,7 @@ TimeSeriesDataPoint::TimeSeriesDataPoint() {
     this->value = 0.0;
 }
 
-TimeSeriesDataPoint::TimeSeriesDataPoint(const std::string& timestamp, float value) {
+TimeSeriesDataPoint::TimeSeriesDataPoint(const std::string& timestamp, double value) {
     strptime(timestamp.c_str(), "%Y-%m-%d %H:%M", &this->timestamp);
     this->value = value;
 }

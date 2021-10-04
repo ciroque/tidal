@@ -6,7 +6,7 @@
 #include "graphLib.h"
 #include "src/app/models/DisplayData.h"
 #include "FrameBufferOpenException.h"
-//#define XTESTING
+#define XTESTING
 
 using namespace boost::adaptors;
 

@@ -11,13 +11,13 @@
 class TimeSeriesDataPoint {
 private:
     tm timestamp{};
-    float value;
+    double value;
 
     static inline bool comparator(TimeSeriesDataPoint l, TimeSeriesDataPoint r) { return l.getValue() < r.getValue(); };
 
 public:
     TimeSeriesDataPoint();
-    TimeSeriesDataPoint(const std::string&, float);
+    TimeSeriesDataPoint(const std::string&, double);
 
     [[nodiscard]] inline float getValue() const { return this->value; }
     [[nodiscard]] inline tm getTimestamp() const { return this->timestamp; }
