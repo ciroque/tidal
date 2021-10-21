@@ -3,17 +3,14 @@
 //
 
 #include <include/nlohmann/json.hpp>
-#include <string>
-#include <utility>
-
-#include "AggregateWeatherData.h"
-
 #include <iostream>
-#include <fstream>
+#include <string>
+
+#include "WeatherParser.h"
 
 using json = nlohmann::json;
 
-AggregateWeatherData AggregateWeatherData::Parse(std::string data) {
+std::map<std::string, std::vector<TimeSeriesDataPoint>> WeatherParser::Parse(std::string data) {
     // root.properties.maxTemperature                   Daily highs
     // root.properties.minTemperature                   Daily lows
     // root.properties.temperature                      Hourly temperatures
@@ -28,6 +25,12 @@ AggregateWeatherData AggregateWeatherData::Parse(std::string data) {
     json j = json::parse(data);
 
     std::vector<std::string> listNames { "maxTemperature", "minTemperature", "temperature", "apparentTemperature" };
+    std::map<std::string, std::vector<TimeSeriesDataPoint>> predictions {
+            {"maxTemperature", std::vector<TimeSeriesDataPoint>()},
+            {"minTemperature", std::vector<TimeSeriesDataPoint>()},
+            {"temperature", std::vector<TimeSeriesDataPoint>()},
+            {"apparentTemperature", std::vector<TimeSeriesDataPoint>()}
+    };
 
     auto properties = j["properties"];
 
@@ -43,31 +46,10 @@ AggregateWeatherData AggregateWeatherData::Parse(std::string data) {
             item["validTime"].get_to(timestamp);
             item["value"].get_to(value);
             std::cout << "key(" << timestamp << "), value(" << value << ")." << std::endl;
-//            for(json::iterator it2 = item.begin(); it2 != item.end(); ++it2) {
-//                auto entry = it2.value();
-//                std::cout << "--> " << entry.dump() << " <--" << std::endl;
-//            }
+
+            predictions[listName].emplace_back(timestamp, value);
         }
     }
 
-    return {};
-}
-
-AggregateWeatherData::AggregateWeatherData() :
-    AggregateWeatherData(
-        std::vector<TimeSeriesDataPoint>(),
-        std::vector<TimeSeriesDataPoint>(),
-        std::vector<TimeSeriesDataPoint>(),
-        std::vector<TimeSeriesDataPoint>()) { }
-
-AggregateWeatherData::AggregateWeatherData(
-    std::vector<TimeSeriesDataPoint> highTemperatures,
-    std::vector<TimeSeriesDataPoint> lowTemperatures,
-    std::vector<TimeSeriesDataPoint> temperatures,
-    std::vector<TimeSeriesDataPoint> apparentTemperatures)
-{
-    this->highTemperatures = std::move(highTemperatures);
-    this->lowTemperatures = std::move(lowTemperatures);
-    this->temperatures = std::move(temperatures);
-    this->apparentTemperatures = std::move(apparentTemperatures);
+    return predictions;
 }

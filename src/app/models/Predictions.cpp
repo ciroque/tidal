@@ -10,6 +10,7 @@
 #include "Predictions.h"
 #include "LunarPredictions.h"
 #include "TidePredictions.h"
+#include "WeatherPredictions.h"
 
 Predictions::Predictions(AppConfig *config) {
     this->config = config;
@@ -20,23 +21,16 @@ Predictions::Predictions(AppConfig *config) {
 // for that date into the DailyPrediction instance
 DisplayData Predictions::BuildDisplayData() {
     auto lunarPredictions = LunarPredictions(LunarRetriever(config)).Load();
-    auto tidePredictions =  TidePredictions(TideRetriever(config)).Load(); // loadTideData();
-//    auto weatherData = loadWeatherData();
+    auto tidePredictions =  TidePredictions(TideRetriever(config)).Load();
+    auto weatherPredictions = WeatherPredictions(WeatherRetriever(config)).Load();
     std::vector<DailyPrediction> dailyPredictions;
 
     for(int i = 0; i < config->getDaysToDisplay(); i++) {
         auto today = Time::GetDay(i);
-
-        // Extract the Lunar data
         DailyPrediction dailyPrediction(today);
         dailyPrediction.lunarData = lunarPredictions.at(i);
-
-        // Extract the Tide data
         dailyPrediction.tideData = tidePredictions.ForDate(today);
-
-        // Extract the Weather data
-//        dailyPrediction.weatherData = extractWeatherDataForDay(weatherData, today);
-
+        dailyPrediction.weatherData = weatherPredictions.ForDate(today);
         dailyPredictions.emplace_back(dailyPrediction);
     }
 
