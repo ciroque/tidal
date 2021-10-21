@@ -9,6 +9,7 @@
 #include <src/app/Time.h>
 #include "Predictions.h"
 #include "LunarPredictions.h"
+#include "TidePredictions.h"
 
 Predictions::Predictions(AppConfig *config) {
     this->config = config;
@@ -18,9 +19,9 @@ Predictions::Predictions(AppConfig *config) {
 // the data from the various data lists (LunarData, TideData, and WeatherParser)
 // for that date into the DailyPrediction instance
 DisplayData Predictions::BuildDisplayData() {
-    auto lunarData = LunarPredictions(LunarRetriever(config)).Load();
-    auto tideData = loadTideData();
-    auto weatherData = loadWeatherData();
+    auto lunarPredictions = LunarPredictions(LunarRetriever(config)).Load();
+    auto tidePredictions =  TidePredictions(TideRetriever(config)).Load(); // loadTideData();
+//    auto weatherData = loadWeatherData();
     std::vector<DailyPrediction> dailyPredictions;
 
     for(int i = 0; i < config->getDaysToDisplay(); i++) {
@@ -28,75 +29,22 @@ DisplayData Predictions::BuildDisplayData() {
 
         // Extract the Lunar data
         DailyPrediction dailyPrediction(today);
-        dailyPrediction.lunarData = lunarData.at(i);
+        dailyPrediction.lunarData = lunarPredictions.at(i);
 
         // Extract the Tide data
-        dailyPrediction.tideData = extractTideDataForDay(tideData, today);
+        dailyPrediction.tideData = tidePredictions.ForDate(today);
 
         // Extract the Weather data
-        dailyPrediction.weatherData = extractWeatherDataForDay(weatherData, today);
+//        dailyPrediction.weatherData = extractWeatherDataForDay(weatherData, today);
 
         dailyPredictions.emplace_back(dailyPrediction);
     }
 
-    TimeSeriesDataPoint highestTideLevel = findHighestTideLevel(dailyPredictions);
-    TimeSeriesDataPoint lowestTideLevel = findLowestTideLevel(dailyPredictions);
+    TimeSeriesDataPoint highestTideLevel = tidePredictions.HighestTide();
+    TimeSeriesDataPoint lowestTideLevel = tidePredictions.LowestTide();
 
     return {
             dailyPredictions,
             highestTideLevel,
             lowestTideLevel};
-}
-
-//LunarPredictions Predictions::loadLunarData() {
-//    LunarRetriever lunarRetriever(config);
-//    auto lunarData = lunarRetriever.Retrieve();
-//    return LunarPredictions(lunarData, <#initializer#>);
-//}
-
-TideData Predictions::loadTideData() {
-    TideRetriever tideRetriever(config);
-    std::string tideData = tideRetriever.Retrieve();
-    return TideData::Parse(tideData);
-}
-
-TideData Predictions::extractTideDataForDay(TideData tideData, tm date) {
-    auto tideLevelsForDay = tideData.TideLevelsForDate(date);
-    TimeSeriesDataPoint highestTideLevel = TimeSeriesDataPoint::MaxValue(tideLevelsForDay);
-    TimeSeriesDataPoint lowestTideLevel = TimeSeriesDataPoint::MinValue(tideLevelsForDay);
-    return {tideLevelsForDay, highestTideLevel, lowestTideLevel};
-}
-
-WeatherData Predictions::extractWeatherDataForDay(WeatherParser aggregateWeatherData, tm date) {
-    return {};
-}
-
-// TODO: Implementate the parser for the Weather Data...
-WeatherParser Predictions::loadWeatherData() {
-    WeatherRetriever weatherRetriever(config);
-    std::string weatherData = weatherRetriever.Retrieve();
-
-    // TODO: The result from WeatherParser::Parse(weatherData) will need to be translated into
-
-    return WeatherParser();
-}
-
-TimeSeriesDataPoint Predictions::findHighestTideLevel(const std::vector<DailyPrediction>& dailyPredictions) {
-    std::vector<TimeSeriesDataPoint> highestLevels;
-    highestLevels.reserve(dailyPredictions.size());
-
-    for(auto dailyPrediction : dailyPredictions) {
-        highestLevels.emplace_back(dailyPrediction.tideData.getHighestTideLevel());
-    }
-    return TimeSeriesDataPoint::MaxValue(highestLevels);
-}
-
-TimeSeriesDataPoint Predictions::findLowestTideLevel(const std::vector<DailyPrediction>& dailyPredictions) {
-    std::vector<TimeSeriesDataPoint> lowestLevels;
-    lowestLevels.reserve(dailyPredictions.size());
-
-    for(auto dailyPrediction : dailyPredictions) {
-        lowestLevels.emplace_back(dailyPrediction.tideData.getLowestTideLevel());
-    }
-    return TimeSeriesDataPoint::MinValue(lowestLevels);
 }

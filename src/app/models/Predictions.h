@@ -11,23 +11,12 @@
 #include "LunarPredictions.h"
 
 class Predictions {
-public:
-    explicit Predictions(AppConfig *config);
-    DisplayData BuildDisplayData();
-
 private:
     AppConfig *config;
 
-    LunarPredictions loadLunarData();
-    TideData loadTideData();
-    WeatherParser loadWeatherData();
-
-    static TideData extractTideDataForDay(TideData tideData, tm date);
-    static WeatherData extractWeatherDataForDay(WeatherParser aggregateWeatherData, tm date);
-
-    static TimeSeriesDataPoint findHighestTideLevel(const std::vector<DailyPrediction>& dailyPredictions);
-    static TimeSeriesDataPoint findLowestTideLevel(const std::vector<DailyPrediction>& dailyPredictions);
-
-    };
+public:
+    explicit Predictions(AppConfig *config);
+    DisplayData BuildDisplayData();
+};
 
 #endif //TIDAL_PREDICTIONS_H
