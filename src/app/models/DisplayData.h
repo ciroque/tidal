@@ -8,7 +8,7 @@
 
 #include <lunar.h>
 #include <vector>
-#include "AggregateWeatherData.h"
+#include "WeatherParser.h"
 #include "TideData.h"
 #include "LunarData.h"
 #include "DailyPrediction.h"

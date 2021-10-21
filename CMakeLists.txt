@@ -24,8 +24,8 @@ add_executable(tidal
         src/app/DisplayManager.h
         src/app/models/DisplayData.cpp
         src/app/models/DisplayData.h
-        src/app/models/AggregateWeatherData.cpp
-        src/app/models/AggregateWeatherData.h
+        src/app/models/WeatherParser.cpp
+        src/app/models/WeatherParser.h
         src/app/models/TideData.cpp
         src/app/models/TideData.h
         src/app/models/LunarData.cpp
@@ -38,21 +38,25 @@ add_executable(tidal
         src/app/config/ConfigReader.h
         src/app/retrievers/LunarRetriever.cpp
         src/app/retrievers/LunarRetriever.h
-        src/app/translaters/DataManager.cpp
-        src/app/translaters/DataManager.h
+        src/app/models/Predictions.cpp
+        src/app/models/Predictions.h
         src/app/models/DailyPrediction.cpp
         src/app/models/DailyPrediction.h
         src/app/config/ConfigFileNotFoundException.cpp
         src/app/config/ConfigFileNotFoundException.h
         src/app/FrameBufferOpenException.cpp
-        src/app/FrameBufferOpenException.h)
+        src/app/FrameBufferOpenException.h
+        src/app/models/WeatherData.cpp
+        src/app/models/WeatherData.h
+        src/app/models/LunarPredictions.cpp
+        src/app/models/LunarPredictions.h src/app/models/TidePredictions.cpp src/app/models/TidePredictions.h src/app/models/TideDataParser.cpp src/app/models/TideDataParser.h src/app/models/WeatherPredictions.cpp src/app/models/WeatherPredictions.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)
 
 target_link_libraries(tidal
         PUBLIC
-        /usr/local/lib/liblunarstatic-d.a
+        /usr/local/lib/liblunarstatic.a
         /usr/local/lib/libgraphLib.a
         pthread)
 target_link_libraries(tidal

@@ -8,16 +8,18 @@
 
 #include "LunarData.h"
 #include "TideData.h"
-#include "AggregateWeatherData.h"
+#include "WeatherData.h"
 
 class DailyPrediction {
+
+    // TODO: Proper encapsulation
 public:
     explicit DailyPrediction(tm date);
 
     tm date = {};
     LunarData lunarData;
     TideData tideData;
-    AggregateWeatherData weatherData;
+    WeatherData weatherData;
 };
 
 #endif //TIDAL_DAILYPREDICTION_H
