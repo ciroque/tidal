@@ -3,7 +3,7 @@
 
 autonumber
 
-DataManager -> WeatherPredictions : Load
+Predictions -> WeatherPredictions : Load
 WeatherPredictions -> WeatherRetriever : Retrieve
 WeatherPredictions <- WeatherRetriever : std::string
 
@@ -14,10 +14,10 @@ loop for "temperature" and "apparentTemperature" in map
 end
 WeatherPredictions <- WeatherParser : std::map<std::string, std::vector<TimeSeriesDataPoint>>
 
-DataManager <- WeatherPredictions : WeatherPredictions
+Predictions <- WeatherPredictions : WeatherPredictions
 
 loop config->getDaysToDisplay() times
-    DataManager -> WeatherPredictions : PredictionsForDate(date)
+    Predictions -> WeatherPredictions : PredictionsForDate(date)
 
     WeatherPredictions -> TimeSeriesDataPoint : ValuesForDate(std::vector<TimeSeriesDataPoint>, date)
     WeatherPredictions <- TimeSeriesDataPoint : std::vector<TimeSeriesDataPoint>
@@ -35,7 +35,7 @@ loop config->getDaysToDisplay() times
     WeatherPredictions <- TimeSeriesDataPoint : MinValue(TimeSeriesDataPoint)
     note left : lowTemperature
 
-    DataManager <- WeatherPredictions : WeatherData
+    Predictions <- WeatherPredictions : WeatherData
 
     note left : WeatherData instance appended to DailyPredictions
 end

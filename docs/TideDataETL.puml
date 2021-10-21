@@ -3,15 +3,15 @@
 
 autonumber
 
-DataManager -> TidePredictions : Load
+Predictions -> TidePredictions : Load
 TidePredictions -> TideRetriever : Retrieve
 TidePredictions <- TideRetriever : std::string
 TidePredictions -> TideDataParser : Parse(std::string)
 TidePredictions <- TideDataParser : std::vector<TimeSeriesDataPoint>
-DataManager <- TidePredictions : TidePredictions
+Predictions <- TidePredictions : TidePredictions
 
 loop config->getDaysToDisplay() times
-    DataManager -> TidePredictions : PredictionsForDate(date)
+    Predictions -> TidePredictions : PredictionsForDate(date)
 
     TidePredictions -> TimeSeriesDataPoint : ValuesForDate(std::vector<TimeSeriesDataPoint>, date)
     TidePredictions <- TimeSeriesDataPoint : std::vector<TimeSeriesDataPoint>
@@ -22,7 +22,7 @@ loop config->getDaysToDisplay() times
     TidePredictions -> TimeSeriesDataPoint : MinValue(std::vector<TimeSeriesDataPoint>)
     TidePredictions <- TimeSeriesDataPoint : MinValue(TimeSeriesDataPoint)
 
-    DataManager <- TidePredictions : TideData
+    Predictions <- TidePredictions : TideData
 
     note left : TideData instance appended to DailyPredictions
 end

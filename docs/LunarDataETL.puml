@@ -3,7 +3,7 @@
 
 autonumber
 
-DataManager -> LunarPredictions : Load
+Predictions -> LunarPredictions : Load
 
 LunarPredictions -> LunarRetriever : Retrieve
 LunarRetriever -> Lunar : CalculateMoonPhase
@@ -14,11 +14,11 @@ loop config->getDaysToDisplay() times
 end
 LunarPredictions <- LunarRetriever : std::vector<LunarData>
 
-DataManager <- LunarPredictions : LunarPredictions
+Predictions <- LunarPredictions : LunarPredictions
 
 loop config->getDaysToDisplay() times
-    DataManager -> LunarPredictions : at(index)
-    DataManager <- LunarPredictions : LunarData
+    Predictions -> LunarPredictions : at(index)
+    Predictions <- LunarPredictions : LunarData
     note left : LunarData instance appended to DailyPredictions
 end
 

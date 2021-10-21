@@ -57,14 +57,14 @@ make rendering the data easier. The classes that represent the data internally t
 
 The primary motivation for this data model is to shape the data into a form that allows tidal to show the data for a given day.
 The DisplayManager should not have the responsibility of correlating data from across the different data sources. 
-That correlation should be the responsibility of a focused class, the DataManager class.
+That correlation should be the responsibility of a focused class, the Predictions class.
 
 #### Transformation process
 
 As noted above, each data source has an associated *Retriever class that handles communication with the associated service.
 
 These Retrievers are currently managed by the Application class. As part of the data refactoring project this logic will
-be moved into the DataManager class. The DataManager class will be responsible for taking the data retrieved from each source and combining
+be moved into the Predictions class. The Predictions class will be responsible for taking the data retrieved from each source and combining
 it into a DisplayData instance. The DisplayData instance will then be handed off to the DisplayManager for rendering.
 
 The following diagram shows the high-level logic flow.
