@@ -1,0 +1,23 @@
++@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+DataManager -> LunarRetriever : Retrieve
+LunarRetriever -> Lunar : CalculateMoonPhase
+Lunar -> LunarRetriever : LunarData(moonPhase)
+
+loop config->getDaysToDisplay() times
+    LunarRetriever -> Lunar : CalculateMoonPhase(julianDay + index)
+    Lunar -> LunarRetriever : LunarData(moonPhase)
+end
+
+DataManager <- LunarRetriever : LunarPredictions
+
+loop config->getDaysToDisplay() times
+    DataManager -> LunarPredictions : at(index)
+    DataManager <- LunarPredictions : LunarData
+    note left : LunarData instance appended to DailyPredictions
+end
+
+@enduml
