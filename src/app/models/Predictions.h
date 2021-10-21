@@ -2,30 +2,32 @@
 // Created by wagnerdev on 9/19/21.
 //
 
-#ifndef TIDAL_DATAMANAGER_H
-#define TIDAL_DATAMANAGER_H
+#ifndef TIDAL_PREDICTIONS_H
+#define TIDAL_PREDICTIONS_H
 
 
 #include <src/app/config/AppConfig.h>
 #include <src/app/models/DisplayData.h>
+#include "LunarPredictions.h"
 
-class DataManager {
+class Predictions {
 public:
-    explicit DataManager(AppConfig *config);
+    explicit Predictions(AppConfig *config);
     DisplayData BuildDisplayData();
 
 private:
     AppConfig *config;
 
-    std::vector<LunarData> loadLunarData();
+    LunarPredictions loadLunarData();
     TideData loadTideData();
-    AggregateWeatherData loadWeatherData();
+    WeatherParser loadWeatherData();
 
     static TideData extractTideDataForDay(TideData tideData, tm date);
+    static WeatherData extractWeatherDataForDay(WeatherParser aggregateWeatherData, tm date);
 
     static TimeSeriesDataPoint findHighestTideLevel(const std::vector<DailyPrediction>& dailyPredictions);
     static TimeSeriesDataPoint findLowestTideLevel(const std::vector<DailyPrediction>& dailyPredictions);
 
     };
 
-#endif //TIDAL_DATAMANAGER_H
+#endif //TIDAL_PREDICTIONS_H
