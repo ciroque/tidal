@@ -11,7 +11,7 @@ TidePredictions <- TideDataParser : std::vector<TimeSeriesDataPoint>
 DataManager <- TidePredictions : TidePredictions
 
 loop config->getDaysToDisplay() times
-    DataManager -> TidePredictions : TideLevelsForDate(date)
+    DataManager -> TidePredictions : PredictionsForDate(date)
 
     TidePredictions -> TimeSeriesDataPoint : ValuesForDate(std::vector<TimeSeriesDataPoint>, date)
     TidePredictions <- TimeSeriesDataPoint : std::vector<TimeSeriesDataPoint>

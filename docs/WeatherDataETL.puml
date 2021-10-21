@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+DataManager -> WeatherPredictions : Load
+WeatherPredictions -> WeatherRetriever : Retrieve
+WeatherPredictions <- WeatherRetriever : std::string
+
+WeatherPredictions -> WeatherParser : Parse(string)
+loop for "temperature" and "apparentTemperature" in map
+    WeatherParser -> TimeSeriesData : unrollDataPoints(std::vector<TimeSeriesDataPoint>)
+    WeatherParser <- TimeSeriesData : std::vector<TimeSeriesDataPoint>
+end
+WeatherPredictions <- WeatherParser : std::map<std::string, std::vector<TimeSeriesDataPoint>>
+
+DataManager <- WeatherPredictions : WeatherPredictions
+
+loop config->getDaysToDisplay() times
+    DataManager -> WeatherPredictions : PredictionsForDate(date)
+
+    WeatherPredictions -> TimeSeriesDataPoint : ValuesForDate(std::vector<TimeSeriesDataPoint>, date)
+    WeatherPredictions <- TimeSeriesDataPoint : std::vector<TimeSeriesDataPoint>
+    note left : temperatures
+
+    WeatherPredictions -> TimeSeriesDataPoint : ValuesForDate(std::vector<TimeSeriesDataPoint>, date)
+    WeatherPredictions <- TimeSeriesDataPoint : std::vector<TimeSeriesDataPoint>
+    note left : apparentTemperatures
+
+    WeatherPredictions -> TimeSeriesDataPoint : MinValue(std::vector<TimeSeriesDataPoint>)
+    WeatherPredictions <- TimeSeriesDataPoint : MinValue(TimeSeriesDataPoint)
+    note left : highTemperature
+
+    WeatherPredictions -> TimeSeriesDataPoint : MinValue(std::vector<TimeSeriesDataPoint>)
+    WeatherPredictions <- TimeSeriesDataPoint : MinValue(TimeSeriesDataPoint)
+    note left : lowTemperature
+
+    DataManager <- WeatherPredictions : WeatherData
+
+    note left : WeatherData instance appended to DailyPredictions
+end
+
+@enduml
