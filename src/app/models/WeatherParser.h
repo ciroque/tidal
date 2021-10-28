@@ -8,10 +8,11 @@
 #include <map>
 
 #include <src/app/TimeSeriesDataPoint.h>
+#include "RawWeatherDatum.h"
 
 class WeatherParser {
 public:
-    static std::map<std::string, std::vector<TimeSeriesDataPoint>> Parse(std::string);
+    static std::map<std::string, std::vector<RawWeatherDatum>> Parse(const std::string&);
 };
 
 #endif //TIDAL_WEATHERPARSER_H

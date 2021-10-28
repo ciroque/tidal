@@ -14,6 +14,9 @@ private:
     TimeSeriesDataPoint highTemperature;
     TimeSeriesDataPoint lowTemperature;
 
+public:
+    WeatherData();
+    WeatherData(std::vector<TimeSeriesDataPoint> temperatures, std::vector<TimeSeriesDataPoint> apparentTemperatures, TimeSeriesDataPoint highTemperature, TimeSeriesDataPoint lowTemperature);
 };
 
 #endif //TIDAL_WEATHERDATA_H

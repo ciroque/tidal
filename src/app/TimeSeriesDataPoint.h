@@ -17,6 +17,7 @@ private:
 
 public:
     TimeSeriesDataPoint();
+    TimeSeriesDataPoint(tm timestamp, double);
     TimeSeriesDataPoint(const std::string&, double);
 
     [[nodiscard]] inline float getValue() const { return this->value; }

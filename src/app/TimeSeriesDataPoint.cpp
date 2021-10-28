@@ -5,9 +5,11 @@
 #include "TimeSeriesDataPoint.h"
 #include "Time.h"
 
-TimeSeriesDataPoint::TimeSeriesDataPoint() {
-    this->timestamp = Time::GetLocalTime();
-    this->value = 0.0;
+TimeSeriesDataPoint::TimeSeriesDataPoint() : TimeSeriesDataPoint(Time::GetLocalTime(), 0.0) { }
+
+TimeSeriesDataPoint::TimeSeriesDataPoint(const tm timestamp, double value) {
+    this->timestamp = timestamp;
+    this->value = value;
 }
 
 TimeSeriesDataPoint::TimeSeriesDataPoint(const std::string& timestamp, double value) {
@@ -34,4 +36,3 @@ TimeSeriesDataPoint TimeSeriesDataPoint::MinValue(const std::vector<TimeSeriesDa
 TimeSeriesDataPoint TimeSeriesDataPoint::MaxValue(const std::vector<TimeSeriesDataPoint>& vector) {
     return *std::max_element(vector.begin(), vector.end(), comparator);
 }
-

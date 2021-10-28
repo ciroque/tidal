@@ -7,10 +7,11 @@
 #include <string>
 
 #include "WeatherParser.h"
+#include "RawWeatherDatum.h"
 
 using json = nlohmann::json;
 
-std::map<std::string, std::vector<TimeSeriesDataPoint>> WeatherParser::Parse(std::string data) {
+std::map<std::string, std::vector<RawWeatherDatum>> WeatherParser::Parse(const std::string& data) {
     // root.properties.maxTemperature                   Daily highs
     // root.properties.minTemperature                   Daily lows
     // root.properties.temperature                      Hourly temperatures
@@ -22,14 +23,14 @@ std::map<std::string, std::vector<TimeSeriesDataPoint>> WeatherParser::Parse(std
     // ++++ root.properties.snowfallAmount
     // ++ root.properties.relativeHumidity
 
+    std::cout << data << std::endl;
     json j = json::parse(data);
 
-    std::vector<std::string> listNames { "maxTemperature", "minTemperature", "temperature", "apparentTemperature" };
-    std::map<std::string, std::vector<TimeSeriesDataPoint>> predictions {
-            {"maxTemperature", std::vector<TimeSeriesDataPoint>()},
-            {"minTemperature", std::vector<TimeSeriesDataPoint>()},
-            {"temperature", std::vector<TimeSeriesDataPoint>()},
-            {"apparentTemperature", std::vector<TimeSeriesDataPoint>()}
+    std::map<std::string, std::vector<RawWeatherDatum>> predictions {
+            {"maxTemperature", std::vector<RawWeatherDatum>()},
+            {"minTemperature", std::vector<RawWeatherDatum>()},
+            {"temperature", std::vector<RawWeatherDatum>()},
+            {"apparentTemperature", std::vector<RawWeatherDatum>()}
     };
 
     auto properties = j["properties"];
@@ -37,17 +38,18 @@ std::map<std::string, std::vector<TimeSeriesDataPoint>> WeatherParser::Parse(std
     std::string timestamp;
     double value;
 
-    for(const auto& listName : listNames) {
-        std::cout << "list name: " << listName << std::endl;
+    for(auto it = predictions.begin(); it != predictions.end(); ++it) {
+        auto listName = it->first;
         auto items = properties[listName]["values"];
 
         for(auto& item : items) {
-
             item["validTime"].get_to(timestamp);
             item["value"].get_to(value);
-            std::cout << "key(" << timestamp << "), value(" << value << ")." << std::endl;
 
-            predictions[listName].emplace_back(timestamp, value);
+            RawWeatherDatum rawWeatherDatum = RawWeatherDatum::Build(timestamp, value);
+            std::cout << "(" << item << ") " << rawWeatherDatum.GetValue() << " is valid for " << rawWeatherDatum.GetRecurrence() << " hours." << std::endl;
+
+            predictions[listName].emplace_back(rawWeatherDatum);
         }
     }
 

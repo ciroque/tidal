@@ -9,11 +9,12 @@
 #include <src/app/retrievers/WeatherRetriever.h>
 #include <src/app/TimeSeriesDataPoint.h>
 #include "WeatherData.h"
+#include "RawWeatherDatum.h"
 
 class WeatherPredictions {
 private:
     WeatherRetriever retriever;
-    std::map<std::string, std::vector<TimeSeriesDataPoint>> predictions;
+    std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions;
 
 public:
     explicit WeatherPredictions(const WeatherRetriever &retriever);
