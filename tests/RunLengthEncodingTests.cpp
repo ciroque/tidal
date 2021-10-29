@@ -46,8 +46,7 @@ TEST_CASE("RunLengthEncoding") {
             REQUIRE(RunLengthEncoding::Decode(input).at(0).GetTimestamp().tm_hour == 22);
             REQUIRE(RunLengthEncoding::Decode(input).at(1).GetTimestamp().tm_hour == 23);
             REQUIRE(RunLengthEncoding::Decode(input).at(2).GetTimestamp().tm_hour == 0);
-            REQUIRE(RunLengthEncoding::Decode(input).at(2).GetTimestamp().tm_mday == 2
-            );
+            REQUIRE(RunLengthEncoding::Decode(input).at(2).GetTimestamp().tm_mday == 2);
         }
 
         SECTION("Multiple Datum") {
