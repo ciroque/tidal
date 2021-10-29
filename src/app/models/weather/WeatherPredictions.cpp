@@ -5,13 +5,14 @@
 
 #include "WeatherPredictions.h"
 #include "WeatherParser.h"
+#include "RunLengthEncoding.h"
 
 WeatherPredictions::WeatherPredictions(const WeatherRetriever &retriever) : retriever(retriever) { }
 
 WeatherPredictions WeatherPredictions::Load() {
     auto data = retriever.Retrieve();
-    this->rawPredictions = WeatherParser::Parse(data);
-    // TODO: Unroll Run Length Encoded values
+    auto rawPredictions = WeatherParser::Parse(data);
+    UnrollEncoding(rawPredictions);
     // TODO: Adjust Time Zone
     // TODO: Convert to std::vector<TimeSeriesDataPoint>
     // this->predictions = ...
@@ -29,4 +30,14 @@ WeatherData WeatherPredictions::ForDate(const tm date) {
 //        highTemperature,
 //        lowTemperature};
     return {};
+}
+
+void WeatherPredictions::UnrollEncoding(std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions) {
+    std::vector<std::string> listNames {"temperature", "apparentTemperature"};
+    for(const auto& listName : listNames) {
+        auto items = rawPredictions[listName];
+        auto unrolled = RunLengthEncoding::Decode(items);
+        items.clear();
+        rawPredictions[listName] = unrolled;
+    }
 }

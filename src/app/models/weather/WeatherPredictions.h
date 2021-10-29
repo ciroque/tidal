@@ -14,12 +14,14 @@
 class WeatherPredictions {
 private:
     WeatherRetriever retriever;
-    std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions;
+    std::map<std::string, std::vector<TimeSeriesDataPoint>> predictions;
+
+    static void UnrollEncoding(std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions);
 
 public:
     explicit WeatherPredictions(const WeatherRetriever &retriever);
 
-    WeatherData ForDate(const tm date);
+    WeatherData ForDate(tm date);
     WeatherPredictions Load();
 };
 
