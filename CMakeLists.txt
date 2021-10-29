@@ -60,7 +60,9 @@ add_executable(tidal
         src/app/models/weather/WeatherPredictions.cpp
         src/app/models/weather/WeatherPredictions.h
         src/app/models/weather/RawWeatherDatum.cpp
-        src/app/models/weather/RawWeatherDatum.h)
+        src/app/models/weather/RawWeatherDatum.h
+        src/app/models/weather/RunLengthEncoding.cpp
+        src/app/models/weather/RunLengthEncoding.h)
 
 include_directories( ${Boost_INCLUDE_DIR} /usr/local/include /usr/local/Cellar/openssl@1.1/1.1.1g/include/)
 target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/include/lunar /usr/local/include/graphLib)

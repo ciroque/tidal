@@ -55,7 +55,3 @@ std::map<std::string, std::vector<RawWeatherDatum>> WeatherParser::Parse(const s
 
     return predictions;
 }
-
-void WeatherParser::UnrollPredictions() {
-
-}

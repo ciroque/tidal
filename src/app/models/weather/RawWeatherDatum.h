@@ -18,11 +18,11 @@ private:
     int recurrence;
     double value;
 
-    RawWeatherDatum(tm timestamp, int recurrence, double value);
 
     static int Recurrence(const std::string& timestamp);
 
 public:
+    RawWeatherDatum(tm timestamp, int recurrence, double value);
 
     static RawWeatherDatum Build(const std::string& validTime, double value);
 
