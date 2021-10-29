@@ -8,9 +8,9 @@
 #include <src/app/models/DailyPrediction.h>
 #include <src/app/Time.h>
 #include "Predictions.h"
-#include "LunarPredictions.h"
-#include "TidePredictions.h"
-#include "WeatherPredictions.h"
+#include "src/app/models/lunar/LunarPredictions.h"
+#include "src/app/models/tide/TidePredictions.h"
+#include "src/app/models/weather/WeatherPredictions.h"
 
 Predictions::Predictions(AppConfig *config) {
     this->config = config;

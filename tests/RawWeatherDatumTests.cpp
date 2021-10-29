@@ -7,7 +7,7 @@
 #include <catch2/catch_all.hpp>
 #include <utility>
 
-#include "../src/app/models/RawWeatherDatum.h"
+#include "../src/app/models/weather/RawWeatherDatum.h"
 
 int TestValue(const std::string& timestamp) {
     RawWeatherDatum datum = RawWeatherDatum::Build(timestamp, 0.0);

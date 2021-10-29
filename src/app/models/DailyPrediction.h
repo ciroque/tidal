@@ -6,9 +6,9 @@
 #define TIDAL_DAILYPREDICTION_H
 
 
-#include "LunarData.h"
-#include "TideData.h"
-#include "WeatherData.h"
+#include "src/app/models/lunar/LunarData.h"
+#include "src/app/models/tide/TideData.h"
+#include "src/app/models/weather/WeatherData.h"
 
 class DailyPrediction {
 

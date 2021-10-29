@@ -6,7 +6,7 @@
 #define TIDAL_LUNARPREDICTIONS_H
 
 
-#include <src/app/models/LunarData.h>
+#include <src/app/models/lunar/LunarData.h>
 #include <src/app/retrievers/LunarRetriever.h>
 
 class LunarPredictions {

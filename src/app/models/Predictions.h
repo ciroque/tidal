@@ -8,7 +8,7 @@
 
 #include <src/app/config/AppConfig.h>
 #include <src/app/models/DisplayData.h>
-#include "LunarPredictions.h"
+#include "src/app/models/lunar/LunarPredictions.h"
 
 class Predictions {
 private:
