@@ -14,11 +14,12 @@ DataManager::DataManager(AppConfig *config) {
 }
 
 // Starting with today, create a DailyPrediction instance and then copy / move
-// the data from the various data lists (LunarData, TideData, and WeatherData)
+// the data from the various data lists (LunarData, TideData, and AggregateWeatherData)
 // for that date into the DailyPrediction instance
 DisplayData DataManager::BuildDisplayData() {
     auto lunarData = loadLunarData();
     auto tideData = loadTideData();
+    auto weatherData = loadWeatherData();
     std::vector<DailyPrediction> dailyPredictions;
 
     for(int i = 0; i < config->getDaysToDisplay(); i++) {
@@ -30,11 +31,11 @@ DisplayData DataManager::BuildDisplayData() {
 
         // Extract the Tide data
         dailyPrediction.tideData = extractTideDataForDay(tideData, today);
-        dailyPredictions.emplace_back(dailyPrediction);
 
         // Extract the Weather data
+//        dailyPrediction.weatherData = extractWeatherDataForDay(weatherData, today);
 
-        // Set the top-level high and low tide values
+        dailyPredictions.emplace_back(dailyPrediction);
     }
 
     TimeSeriesDataPoint highestTideLevel = findHighestTideLevel(dailyPredictions);
@@ -66,10 +67,10 @@ TideData DataManager::extractTideDataForDay(TideData tideData, tm date) {
 }
 
 // TODO: Implementate the parser for the Weather Data...
-WeatherData DataManager::loadWeatherData() {
+AggregateWeatherData DataManager::loadWeatherData() {
     WeatherRetriever weatherRetriever(config);
     std::string weatherData = weatherRetriever.Retrieve();
-    return WeatherData::Parse(weatherData);
+    return AggregateWeatherData::Parse(weatherData);
 }
 
 TimeSeriesDataPoint DataManager::findHighestTideLevel(const std::vector<DailyPrediction>& dailyPredictions) {

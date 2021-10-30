@@ -12,7 +12,7 @@ DataManager -> TideRetriever : retrieve
 DataManager <- TideRetriever : TideData
 
 DataManager -> WeatherRetriever : retrieve
-DataManager <- WeatherRetriever : WeatherData
+DataManager <- WeatherRetriever : AggregateWeatherData
 
 Application <- DataManager : DisplayData
 

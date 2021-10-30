@@ -8,7 +8,7 @@
 
 #include "LunarData.h"
 #include "TideData.h"
-#include "WeatherData.h"
+#include "AggregateWeatherData.h"
 
 class DailyPrediction {
 public:
@@ -17,7 +17,7 @@ public:
     tm date = {};
     LunarData lunarData;
     TideData tideData;
-    WeatherData weatherData;
+    AggregateWeatherData weatherData;
 };
 
 #endif //TIDAL_DAILYPREDICTION_H

@@ -19,7 +19,7 @@ private:
 
     std::vector<LunarData> loadLunarData();
     TideData loadTideData();
-    WeatherData loadWeatherData();
+    AggregateWeatherData loadWeatherData();
 
     static TideData extractTideDataForDay(TideData tideData, tm date);
 

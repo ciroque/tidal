@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Predictions -> LunarPredictions : Load
+
+LunarPredictions -> LunarRetriever : Retrieve
+LunarRetriever -> Lunar : CalculateMoonPhase
+LunarRetriever <- Lunar : LunarData(moonPhase)
+loop config->getDaysToDisplay() times
+    LunarRetriever -> Lunar : CalculateMoonPhase(julianDay + index)
+    LunarRetriever <- Lunar : LunarData(moonPhase)
+end
+LunarPredictions <- LunarRetriever : std::vector<LunarData>
+
+Predictions <- LunarPredictions : LunarPredictions
+
+loop config->getDaysToDisplay() times
+    Predictions -> LunarPredictions : at(index)
+    Predictions <- LunarPredictions : LunarData
+    note left : LunarData instance appended to DailyPredictions
+end
+
+@enduml
