@@ -19,7 +19,7 @@ public:
     tm date = {};
     LunarData lunarData;
     TideData tideData;
-    AggregateWeatherData weatherData;
+    WeatherData weatherData;
 };
 
 #endif //TIDAL_DAILYPREDICTION_H
