@@ -13,7 +13,6 @@ WeatherPredictions WeatherPredictions::Load() {
     auto data = retriever.Retrieve();
     auto rawPredictions = WeatherParser::Parse(data);
     UnrollEncoding(rawPredictions);
-    // TODO: Adjust Time Zone
     // TODO: Convert to std::vector<TimeSeriesDataPoint>
     // this->predictions = ...
     return *this;

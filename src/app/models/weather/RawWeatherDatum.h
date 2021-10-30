@@ -20,6 +20,7 @@ private:
 
 
     static int Recurrence(const std::string& timestamp);
+    static tm AdjustTime(const std::string& validTime);
 
 public:
     RawWeatherDatum(tm timestamp, int recurrence, double value);
