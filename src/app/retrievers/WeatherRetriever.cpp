@@ -7,10 +7,11 @@
 
 std::string WeatherRetriever::Retrieve() {
     std::cout << "WeatherRetriever::Retrieve" << std::endl;
+    auto path = BuildPath();
     return this->Retriever::Retrieve(
             config->getWeatherHttpHost(),
             config->getWeatherHttpPort(),
-            BuildPath());
+            path);
 }
 
 WeatherRetriever::WeatherRetriever(AppConfig *config) {

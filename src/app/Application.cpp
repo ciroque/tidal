@@ -7,7 +7,7 @@
 #include <thread>
 #include <zconf.h>
 #include <csignal>
-#include <src/app/translaters/DataManager.h>
+#include <src/app/models/Predictions.h>
 
 #include "Application.h"
 #include "Time.h"
@@ -39,7 +39,7 @@ void Application::RegisterSignalHandlers() {
 
 void Application::HourlyUpdate() {
     try {
-        auto dataManager = DataManager(&config);
+        auto dataManager = Predictions(&config);
 
         while(true) {
             auto displayData = dataManager.BuildDisplayData();

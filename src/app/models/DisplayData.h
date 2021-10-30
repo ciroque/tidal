@@ -8,9 +8,9 @@
 
 #include <lunar.h>
 #include <vector>
-#include "AggregateWeatherData.h"
-#include "TideData.h"
-#include "LunarData.h"
+#include "src/app/models/weather/WeatherParser.h"
+#include "src/app/models/tide/TideData.h"
+#include "src/app/models/lunar/LunarData.h"
 #include "DailyPrediction.h"
 
 class DisplayData {
