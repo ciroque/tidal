@@ -29,11 +29,17 @@ int RawWeatherDatum::Recurrence(const std::string& validTime) {
     return hours;
 }
 
-RawWeatherDatum RawWeatherDatum::Build(const std::string& validTime, double value) {
-    int recurrence = RawWeatherDatum::Recurrence(validTime);
+tm RawWeatherDatum::AdjustTime(const std::string& validTime){
     tm timestamp{};
     strptime(validTime.c_str(), "%Y-%m-%dT%H:%M", &timestamp);
+    time_t calTime = mktime(&timestamp);//Get calendar time in seconds
+    calTime -= timezone;		//Convert to local time
+    return *localtime(&calTime);	//Populate tm struct with local time
+}
 
+RawWeatherDatum RawWeatherDatum::Build(const std::string& validTime, double value) {
+    int recurrence = RawWeatherDatum::Recurrence(validTime);
+    auto timestamp = RawWeatherDatum::AdjustTime(validTime);
     return {
         timestamp,
         recurrence,

@@ -22,4 +22,19 @@ TEST_CASE("RawWeatherDatum") {
         REQUIRE(TestValue("2021-10-21T18:00:00+00:00") == 1);
         REQUIRE(TestValue("2021-10-23T19:00:00+00:00/PT4D") == 1);
     }
+
+    SECTION("Build") {
+	SECTION("Time is adjusted to local time") {
+		auto baseTimestamp = "2021-10-30T12:00:00+00:00/PT1H";
+		auto rwd = RawWeatherDatum::Build(baseTimestamp, 0.0);
+		REQUIRE(rwd.GetTimestamp().tm_hour == 5);
+	}
+	
+	SECTION("Time is adjusted to local timei, previous day") {
+		auto baseTimestamp = "2021-10-30T03:00:00+00:00/PT1H";
+		auto rwd = RawWeatherDatum::Build(baseTimestamp, 0.0);
+		REQUIRE(rwd.GetTimestamp().tm_hour == 20);
+		REQUIRE(rwd.GetTimestamp().tm_mday == 29);
+	}
+    }
 }
