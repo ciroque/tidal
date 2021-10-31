@@ -3,7 +3,6 @@
 //
 
 #include <include/nlohmann/json.hpp>
-#include <iostream>
 #include <string>
 
 #include "WeatherParser.h"
@@ -12,18 +11,6 @@
 using json = nlohmann::json;
 
 std::map<std::string, std::vector<RawWeatherDatum>> WeatherParser::Parse(const std::string& data) {
-    // root.properties.maxTemperature                   Daily highs
-    // root.properties.minTemperature                   Daily lows
-    // root.properties.temperature                      Hourly temperatures
-    // root.properties.apparentTemperature              Hourly "Feels Like"
-    // ++ root.properties.windDirection                 Three-hour periods
-    // ++ root.properties.windSpeed                     Three-hour periods
-    // ++ root.properties.windGust                      Three-hour periods
-    // +++ root.properties.probabilityOfPrecipitation   Period uses back-off algorithm
-    // ++++ root.properties.snowfallAmount
-    // ++ root.properties.relativeHumidity
-
-    std::cout << data << std::endl;
     json j = json::parse(data);
 
     std::map<std::string, std::vector<RawWeatherDatum>> predictions {
@@ -47,8 +34,6 @@ std::map<std::string, std::vector<RawWeatherDatum>> WeatherParser::Parse(const s
             item["value"].get_to(value);
 
             RawWeatherDatum rawWeatherDatum = RawWeatherDatum::Build(timestamp, value);
-            std::cout << "(" << item << ") " << rawWeatherDatum.GetValue() << " is valid for " << rawWeatherDatum.GetRecurrence() << " hours." << std::endl;
-
             predictions[listName].emplace_back(rawWeatherDatum);
         }
     }
