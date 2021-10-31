@@ -15,7 +15,7 @@ int TestValue(const std::string& timestamp) {
 }
 
 TEST_CASE("RawWeatherDatum") {
-    SECTION("Recurrence") {
+    SECTION("DetermineRecurrence") {
         REQUIRE(TestValue("2021-10-21T18:00:00+00:00/PT1H") == 1);
         REQUIRE(TestValue("2021-10-27T20:00:00+00:00/PT3H") == 3);
         REQUIRE(TestValue("2021-10-23T19:00:00+00:00/PT4H") == 4);
@@ -24,17 +24,17 @@ TEST_CASE("RawWeatherDatum") {
     }
 
     SECTION("Build") {
-	SECTION("Time is adjusted to local time") {
-		auto baseTimestamp = "2021-10-30T12:00:00+00:00/PT1H";
-		auto rwd = RawWeatherDatum::Build(baseTimestamp, 0.0);
-		REQUIRE(rwd.GetTimestamp().tm_hour == 5);
-	}
-	
-	SECTION("Time is adjusted to local timei, previous day") {
-		auto baseTimestamp = "2021-10-30T03:00:00+00:00/PT1H";
-		auto rwd = RawWeatherDatum::Build(baseTimestamp, 0.0);
-		REQUIRE(rwd.GetTimestamp().tm_hour == 20);
-		REQUIRE(rwd.GetTimestamp().tm_mday == 29);
-	}
+        SECTION("Time is adjusted to local time") {
+            auto baseTimestamp = "2021-10-30T12:00:00+00:00/PT1H";
+            auto rwd = RawWeatherDatum::Build(baseTimestamp, 0.0);
+            REQUIRE(rwd.GetTimestamp().tm_hour == 5);
+        }
+
+        SECTION("Time is adjusted to local time, previous day") {
+            auto baseTimestamp = "2021-10-30T03:00:00+00:00/PT1H";
+            auto rwd = RawWeatherDatum::Build(baseTimestamp, 0.0);
+            REQUIRE(rwd.GetTimestamp().tm_hour == 20);
+            REQUIRE(rwd.GetTimestamp().tm_mday == 29);
+        }
     }
 }
