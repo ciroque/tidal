@@ -17,7 +17,7 @@ private:
 
     int recurrence;
 
-    static int Recurrence(const std::string& timestamp);
+    static int DetermineRecurrence(const std::string& validTime);
     static tm AdjustTime(const std::string& validTime);
 
 public:
