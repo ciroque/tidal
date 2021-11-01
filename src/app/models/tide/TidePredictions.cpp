@@ -2,6 +2,7 @@
 // Created by ciroque on 2021-10-21.
 //
 
+#include <src/app/models/utils/TimeSeries.h>
 #include "TidePredictions.h"
 #include "TideDataParser.h"
 
@@ -14,16 +15,16 @@ TidePredictions TidePredictions::Load() {
 }
 
 TideData TidePredictions::ForDate(const tm date) {
-    auto tideLevels = TimeSeriesDataPoint::ValuesForDate(this->predictions, date);
-    auto lowestLevel = TimeSeriesDataPoint::MinValue(tideLevels);
-    auto highestLevel = TimeSeriesDataPoint::MaxValue(tideLevels);
+    auto tideLevels = TimeSeries::ValuesForDate(this->predictions, date);
+    auto lowestLevel = TimeSeries::MinValue(tideLevels);
+    auto highestLevel = TimeSeries::MaxValue(tideLevels);
     return { tideLevels, highestLevel, lowestLevel };
 }
 
 TimeSeriesDataPoint TidePredictions::HighestTide() {
-    return TimeSeriesDataPoint::MaxValue(this->predictions);
+    return TimeSeries::MaxValue(this->predictions);
 }
 
 TimeSeriesDataPoint TidePredictions::LowestTide() {
-    return TimeSeriesDataPoint::MinValue(this->predictions);
+    return TimeSeries::MinValue(this->predictions);
 }
