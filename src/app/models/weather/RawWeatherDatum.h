@@ -8,16 +8,14 @@
 
 #include <regex>
 #include <string>
+#include "../../TimeSeriesDataPoint.h"
 
-class RawWeatherDatum {
+class RawWeatherDatum : public TimeSeriesDataPoint {
 private:
     static const char DURATION_DELIMITER = '/';
     static const std::regex FULL_TIMESTAMP_PARSER;
 
-    tm timestamp{};
     int recurrence;
-    double value;
-
 
     static int Recurrence(const std::string& timestamp);
     static tm AdjustTime(const std::string& validTime);
