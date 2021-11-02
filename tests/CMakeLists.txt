@@ -5,5 +5,9 @@ add_executable(
         RawWeatherDatumTests.cpp
         ../src/app/models/weather/RawWeatherDatum.cpp
         RunLengthEncodingTests.cpp
-        ../src/app/models/weather/RunLengthEncoding.cpp)
+        ../src/app/models/weather/RunLengthEncoding.cpp
+        TimeSeriesBackFillTests.cpp
+        ../src/app/TimeSeriesDataPoint.cpp
+        ../src/app/Time.cpp
+)
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
