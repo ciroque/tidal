@@ -4,6 +4,8 @@ add_executable(
         tests
         RawWeatherDatumTests.cpp
         RunLengthEncodingTests.cpp
+        TimeSeriesBackFillTests.cpp
+        ../src/app/TimeSeriesDataPoint.cpp
         TimeSeriesTests.cpp
         ../src/app/Time.cpp
         ../src/app/models/utils/TimeSeries.h
