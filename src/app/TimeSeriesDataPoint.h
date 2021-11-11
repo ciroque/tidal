@@ -10,10 +10,11 @@
 
 class TimeSeriesDataPoint {
 private:
+    static inline bool comparator(TimeSeriesDataPoint l, TimeSeriesDataPoint r) { return l.getValue() < r.getValue(); };
+
+protected:
     tm timestamp{};
     double value;
-
-    static inline bool comparator(TimeSeriesDataPoint l, TimeSeriesDataPoint r) { return l.getValue() < r.getValue(); };
 
 public:
     TimeSeriesDataPoint();
