@@ -8,10 +8,8 @@
 
 std::regex ISO8601_DURATION_HOUR_EXTRACT = std::regex("^/?PT([0-9]+)H$");
 
-RawWeatherDatum::RawWeatherDatum(tm timestamp, int recurrence, double value) {
-    this->timestamp = timestamp;
+RawWeatherDatum::RawWeatherDatum(tm timestamp, int recurrence, double value) : TimeSeriesDataPoint(timestamp, value) {
     this->recurrence = recurrence;
-    this->value = value;
 }
 
 int RawWeatherDatum::DetermineRecurrence(const std::string& validTime) {
