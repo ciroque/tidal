@@ -7,6 +7,7 @@
 #include <catch2/catch_all.hpp>
 #include <utility>
 #include "../src/app/TimeSeriesDataPoint.h"
+#include "../src/app/models/utils/TimeSeries.h"
 
 /*----------------------------------------------
  * This goes in the TimeSeriesBackFill class
@@ -18,26 +19,13 @@ std::vector<T> WithHourlyAverage(std::vector<T> vector) {
 
     for( ; hour >= 0; hour--) {
         auto hourValues = ValuesForHour(vector, hour);
-        auto average = AverageValue(hourValues);
+        auto average = TimeSeries::AverageValue(hourValues);
         tm timestamp = firstTimestamp;
         timestamp.tm_hour = hour;
         vector.emplace(vector.begin(), TimeSeriesDataPoint(timestamp, average));
     }
 
     return vector;
-}
-
-/*----------------------------------------------
- * This goes in the TimeSeries class
- */
-template <typename T>
-double AverageValue(const std::vector<T> vector) {
-    auto sum = 0.0;
-    for(auto item : vector) {
-        sum += item.getValue();
-    }
-
-    return sum / vector.size();
 }
 
 /*----------------------------------------------
