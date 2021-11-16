@@ -27,10 +27,11 @@ DisplayData Predictions::BuildDisplayData() {
 
     for(int i = 0; i < config->getDaysToDisplay(); i++) {
         auto today = Time::GetDay(i);
-        DailyPrediction dailyPrediction(today);
-        dailyPrediction.lunarData = lunarPredictions.at(i);
-        dailyPrediction.tideData = tidePredictions.ForDate(today);
-        dailyPrediction.weatherData = weatherPredictions.ForDate(today);
+        auto lunarData = lunarPredictions.at(i);
+        auto tideData = tidePredictions.ForDate(today);
+        auto weatherData = weatherPredictions.ForDate(today);
+
+        DailyPrediction dailyPrediction(today, lunarData, tideData, weatherData);
         dailyPredictions.emplace_back(dailyPrediction);
     }
 

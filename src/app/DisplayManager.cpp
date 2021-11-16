@@ -74,21 +74,21 @@ void DisplayManager::Render(DisplayData displayData) {
 	verticalLine(buffer, channelPos, 0, 360, 0x0000FF);
 
 	/*Moon rendering*/
-	DrawMoonPhase(xoffset, 90, 50, M_PI * 2 * day.lunarData.phase);
-	std::snprintf(stringBuf, sizeof(stringBuf), "%.2f%%", day.lunarData.visible * 100.0f);
+	DrawMoonPhase(xoffset, 90, 50, M_PI * 2 * day.GetLunarData().phase);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.2f%%", day.GetLunarData().visible * 100.0f);
 	int strOff = strlen(stringBuf) * 5;	/*Half pixel length for string*/
 	drawString(buffer, stringBuf, xoffset - strOff, 150, 0x0000FF);
-	std::snprintf(stringBuf, sizeof(stringBuf), "%d/%d", day.date.tm_mon + 1, day.date.tm_mday);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%d/%d", day.GetDate().tm_mon + 1, day.GetDate().tm_mday);
 	strOff = strlen(stringBuf) * 10;	/*Half pixel length for big string*/
 	drawBigString(buffer, stringBuf, xoffset - strOff, 10, 0x0000FF);
 
 	/*Tide rendering*/
-	auto tideLevels = day.tideData.getTideLevels();
+	auto tideLevels = day.GetTideData().getTideLevels();
 	float tidePointSpacing = (float)channelWidth / (float)tideLevels.size();
-	float highTide = day.tideData.getHighestTideLevel().getValue();
-	float lowTide = day.tideData.getLowestTideLevel().getValue();
-	auto highTime = day.tideData.getHighestTideLevel().getTimestamp();
-	auto lowTime = day.tideData.getLowestTideLevel().getTimestamp();
+	float highTide = day.GetTideData().getHighestTideLevel().getValue();
+	float lowTide = day.GetTideData().getLowestTideLevel().getValue();
+	auto highTime = day.GetTideData().getHighestTideLevel().getTimestamp();
+	auto lowTime = day.GetTideData().getLowestTideLevel().getTimestamp();
 	for(auto tdat : tideLevels | indexed()) {
 	    auto tideData = tdat.value();	/*Easy accessor*/
 	    float level = tideData.getValue();
@@ -123,7 +123,7 @@ void DisplayManager::Render(DisplayData displayData) {
     }
 
     /*Render current tide mark and print level*/
-    auto curTideLevels = displayData.dailyPredictions.at(0).tideData.getTideLevels();
+    auto curTideLevels = displayData.dailyPredictions.at(0).GetTideData().getTideLevels();
     float xoffset = (float)(displayData.hour * channelWidth) / curTideLevels.size();
 
     /*Draws yellow arrow pointing at current tide*/
