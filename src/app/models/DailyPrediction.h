@@ -11,15 +11,20 @@
 #include "src/app/models/weather/WeatherData.h"
 
 class DailyPrediction {
-
-    // TODO: Proper encapsulation
-public:
-    explicit DailyPrediction(tm date);
-
+private:
     tm date = {};
     LunarData lunarData;
     TideData tideData;
     WeatherData weatherData;
+
+public:
+    explicit DailyPrediction(tm date);
+    DailyPrediction(tm date, LunarData lunarData, TideData tideData, WeatherData weatherData);
+
+    inline LunarData GetLunarData() { return this->lunarData; }
+    inline TideData GetTideData() { return this->tideData; }
+    inline WeatherData GetWeatherData() { return this->weatherData; }
+    inline tm GetDate() { return this->date; }
 };
 
 #endif //TIDAL_DAILYPREDICTION_H
