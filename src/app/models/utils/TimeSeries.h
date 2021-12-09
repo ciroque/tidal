@@ -59,6 +59,21 @@ public:
         return *std::max_element(vector.begin(), vector.end(), comparator);
     }
 
+    template <typename T>
+    static double AverageValue(const std::vector<T> vector) {
+        if(vector.empty()) {
+            return 0.0;
+        }
+
+        auto sum = 0.0;
+        for(auto item : vector) {
+            sum += item.getValue();
+        }
+
+        double average = sum / vector.size();
+        return  average;
+    }
+
 };
 
 #endif //TIDAL_TIMESERIES_H

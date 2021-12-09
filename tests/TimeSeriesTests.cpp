@@ -8,7 +8,47 @@
 #include "../src/app/models/utils/TimeSeries.h"
 #include "../src/app/models/weather/RawWeatherDatum.h"
 
+double Abs(double x) { return ((x) < 0 ? -(x) : (x)); }
+double Max(double a, double b) { return ((a) > (b) ? (a) : (b)); }
+double RelativeDifference(double a, double b) {
+    double c = Abs(a);
+    double d = Abs(b);
+
+    d = Max(c, d);
+
+    return d == 0.0 ? 0.0 : Abs(a - b) / d;
+}
+
 TEST_CASE("TimeSeries") {
+    SECTION("AverageValues") {
+        SECTION("Empty vector") {
+            auto timeSeriesData = std::vector<TimeSeriesDataPoint> {};
+
+            REQUIRE(TimeSeries::AverageValue(timeSeriesData) == 0.0);
+        }
+
+        SECTION("One value in vector") {
+            const double VALUE = 12.45;
+            auto timeSeriesData = std::vector<TimeSeriesDataPoint> {
+                    {tm{}, VALUE}
+            };
+
+            REQUIRE(TimeSeries::AverageValue(timeSeriesData) == VALUE);
+        }
+
+        SECTION("Multiple values in vector") {
+            const double expected = 2.2;
+            auto timeSeriesData = std::vector<TimeSeriesDataPoint> {
+                    {tm{}, 1.1},
+                    {tm{}, 2.2},
+                    {tm{}, 3.3}
+            };
+            const double actual = TimeSeries::AverageValue(timeSeriesData);
+            const double delta = RelativeDifference(actual, expected);
+            REQUIRE(delta <= 0.001);
+        }
+    }
+
     SECTION("ValuesForHour") {
         SECTION("With TimeSeriesDataPoints") {
             auto timeSeriesData = std::vector<TimeSeriesDataPoint> {
