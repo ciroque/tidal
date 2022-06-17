@@ -5,6 +5,7 @@
 #ifndef TIDAL_TIMESERIES_H
 #define TIDAL_TIMESERIES_H
 
+#include <algorithm>
 #include <vector>
 #include "../../TimeSeriesDataPoint.h"
 
