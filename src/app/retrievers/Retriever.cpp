@@ -7,8 +7,6 @@
 #include <iostream>
 #include <string>
 
-#include "src/app/root_certificates.h"
-
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/ssl.hpp>
@@ -25,15 +23,16 @@ namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 std::string Retriever::Retrieve(std::string host, std::string port, std::string target) {
-    http::response<http::string_body> res;
+    std::string response = "[]";
     try
     {
         int version = 11;
+        beast::error_code ec;
 
         net::io_context ioc;
         ssl::context ctx(ssl::context::tlsv12_client);
 
-        load_root_certificates(ctx);
+        ctx.set_default_verify_paths();
 
         ctx.set_verify_mode(ssl::verify_peer);
 
@@ -60,9 +59,10 @@ std::string Retriever::Retrieve(std::string host, std::string port, std::string 
 
         beast::flat_buffer buffer;
 
+        http::response<http::string_body> res;
         http::read(stream, buffer, res);
+        response = res.body();
 
-        beast::error_code ec;
         stream.shutdown(ec);
         if(ec == net::error::eof)
         {
@@ -74,14 +74,15 @@ std::string Retriever::Retrieve(std::string host, std::string port, std::string 
             throw beast::system_error{ec};
         }
     }
-    catch(std::exception const& e)
-    {
-        std::cerr << "Error: " << e.what() << std::endl;
+    catch(boost::system::system_error const &se) {
+        std::cerr << host.c_str() << "; " << se.code() << "; " << se.what() << std::endl;
+    } catch(std::exception const& e) {
+        std::cerr << host.c_str() << "; " << "Error: " << e.what() << std::endl;
     } catch (const std::string& ex) {
-        std::cerr << "Error string: " << ex << std::endl;
+        std::cerr << host.c_str() << "; " << "Error string: " << ex << std::endl;
     } catch (...) {
-        std::cerr << "Some other error " << std::endl;// ...
+        std::cerr << host.c_str() << "; " << "Some other error " << std::endl;// ...
     }
 
-    return res.body();
+    return response;
 }
