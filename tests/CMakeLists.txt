@@ -15,4 +15,4 @@ add_executable(
         ../src/app/models/weather/RunLengthEncoding.cpp
         ../src/app/models/weather/
 )
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+#target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

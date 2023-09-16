@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(tidal VERSION 0.2)
 
 find_package(Boost 1.73 REQUIRED)
-find_package(Catch2 3 REQUIRED)
+#find_package(Catch2 3 REQUIRED)
 
 configure_file(TidalConfig.h.in TidalConfig.h)
 
@@ -56,6 +56,8 @@ add_executable(tidal
         src/app/models/tide/TidePredictions.cpp
         src/app/models/tide/TidePredictions.h
         src/app/models/tide/TideDataParser.cpp
+        src/app/lunar/lunar.h
+        src/app/lunar/lunar.cpp
         src/app/models/tide/TideDataParser.h
         src/app/models/weather/WeatherPredictions.cpp
         src/app/models/weather/WeatherPredictions.h
@@ -69,7 +71,6 @@ target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/inclu
 
 target_link_libraries(tidal
         PUBLIC
-        /usr/local/lib/liblunarstatic.a
         /usr/local/lib/libgraphLib.a
         pthread)
 target_link_libraries(tidal

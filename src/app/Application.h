@@ -5,7 +5,7 @@
 #ifndef TIDAL_APPLICATION_H
 #define TIDAL_APPLICATION_H
 
-#include <lunar.h>
+#include <src/app/lunar/lunar.h>
 #include <src/app/config/AppConfig.h>
 #include "DisplayManager.h"
 #include "src/app/models/lunar/LunarData.h"

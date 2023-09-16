@@ -33,9 +33,9 @@ std::string Retriever::Retrieve(std::string host, std::string port, std::string 
         net::io_context ioc;
         ssl::context ctx(ssl::context::tlsv12_client);
 
-        load_root_certificates(ctx);
+//        load_root_certificates(ctx);
 
-        ctx.set_verify_mode(ssl::verify_peer);
+        ctx.set_verify_mode(ssl::verify_none);
 
         tcp::resolver resolver(ioc);
         beast::ssl_stream<beast::tcp_stream> stream(ioc, ctx);

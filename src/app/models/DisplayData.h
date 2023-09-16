@@ -6,7 +6,7 @@
 #define TIDAL_DISPLAYDATA_H
 
 
-#include <lunar.h>
+#include <src/app/lunar/lunar.h>
 #include <vector>
 #include "src/app/models/weather/WeatherParser.h"
 #include "src/app/models/tide/TideData.h"
