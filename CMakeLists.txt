@@ -22,7 +22,6 @@ add_executable(tidal
         src/app/Time.cpp src/app/Time.h
         src/app/retrievers/Retriever.cpp
         src/app/retrievers/Retriever.h
-        src/app/root_certificates.h
         src/app/DisplayManager.cpp
         src/app/DisplayManager.h
         src/app/models/DisplayData.cpp
