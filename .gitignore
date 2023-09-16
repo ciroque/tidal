@@ -17,3 +17,5 @@ cmake_install.cmake
 
 Testing/
 tests/tests
+
+.cmake/
