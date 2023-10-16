@@ -22,7 +22,6 @@ add_executable(tidal
         src/app/Time.cpp src/app/Time.h
         src/app/retrievers/Retriever.cpp
         src/app/retrievers/Retriever.h
-        src/app/root_certificates.h
         src/app/DisplayManager.cpp
         src/app/DisplayManager.h
         src/app/models/DisplayData.cpp
@@ -69,7 +68,7 @@ target_include_directories(tidal PUBLIC "${PROJECT_BINARY_DIR}" /usr/local/inclu
 
 target_link_libraries(tidal
         PUBLIC
-        /usr/local/lib/liblunarstatic.a
+        /usr/local/lib/liblunarstatic-d.a
         /usr/local/lib/libgraphLib.a
         pthread)
 target_link_libraries(tidal
