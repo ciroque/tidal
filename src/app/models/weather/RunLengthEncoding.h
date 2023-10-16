@@ -10,7 +10,7 @@
 
 class RunLengthEncoding {
 public:
-    static std::vector<RawWeatherDatum> Decode(std::vector<RawWeatherDatum> data);
+    static std::vector<TimeSeriesDataPoint> Decode(std::vector<RawWeatherDatum> data);
 };
 
 

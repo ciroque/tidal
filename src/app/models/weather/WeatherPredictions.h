@@ -16,7 +16,7 @@ private:
     WeatherRetriever retriever;
     std::map<std::string, std::vector<TimeSeriesDataPoint>> predictions;
 
-    static void UnrollEncoding(std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions);
+    void UnrollEncoding(std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions);
 
 public:
     explicit WeatherPredictions(const WeatherRetriever &retriever);
