@@ -11,12 +11,25 @@ class WeatherData {
 private:
     std::vector<TimeSeriesDataPoint> temperatures;
     std::vector<TimeSeriesDataPoint> apparentTemperatures;
+    std::vector<TimeSeriesDataPoint> precipitationProbabilities;
+    std::vector<TimeSeriesDataPoint> windSpeeds;
+    std::vector<TimeSeriesDataPoint> windGusts;
+    std::vector<TimeSeriesDataPoint> skyCover;
+
     TimeSeriesDataPoint highTemperature;
     TimeSeriesDataPoint lowTemperature;
 
 public:
     WeatherData();
-    WeatherData(std::vector<TimeSeriesDataPoint> temperatures, std::vector<TimeSeriesDataPoint> apparentTemperatures, TimeSeriesDataPoint highTemperature, TimeSeriesDataPoint lowTemperature);
+    WeatherData(
+            std::vector<TimeSeriesDataPoint> temperatures,
+            std::vector<TimeSeriesDataPoint> apparentTemperatures,
+            std::vector<TimeSeriesDataPoint> precipitationProbabilities,
+            std::vector<TimeSeriesDataPoint> windSpeeds,
+            std::vector<TimeSeriesDataPoint> windGusts,
+            std::vector<TimeSeriesDataPoint> skyCover,
+            TimeSeriesDataPoint highTemperature,
+            TimeSeriesDataPoint lowTemperature);
 };
 
 #endif //TIDAL_WEATHERDATA_H

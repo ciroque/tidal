@@ -3,9 +3,11 @@
 // Created by ciroque on 2021-10-21.
 //
 
+#include "WeatherCommon.h"
 #include "WeatherPredictions.h"
 #include "WeatherParser.h"
 #include "RunLengthEncoding.h"
+#include "src/app/models/utils/TimeSeries.h"
 
 WeatherPredictions::WeatherPredictions(const WeatherRetriever &retriever) : retriever(retriever) { }
 
@@ -13,30 +15,37 @@ WeatherPredictions WeatherPredictions::Load() {
     auto data = retriever.Retrieve();
     auto rawPredictions = WeatherParser::Parse(data);
     UnrollEncoding(rawPredictions);
-    // TODO: Convert to std::vector<TimeSeriesDataPoint>
-    // this->predictions = ...
+
     return *this;
 }
 
 WeatherData WeatherPredictions::ForDate(const tm date) {
-//    auto temperatures = TimeSeriesDataPoint::ValuesForDate(this->predictions["temperature"], date);
-//    auto apparentTemperatures = TimeSeriesDataPoint::ValuesForDate(this->predictions["apparentTemperature"], date);
-//    auto highTemperature = TimeSeriesDataPoint::ValuesForDate(this->predictions["maxTemperature"], date).front();
-//    auto lowTemperature = TimeSeriesDataPoint::ValuesForDate(this->predictions["minTemperature"], date).front();
-//    return {
-//        temperatures,
-//        apparentTemperatures,
-//        highTemperature,
-//        lowTemperature};
-    return {};
+    auto temperatures = TimeSeries::ValuesForDate(this->predictions["temperature"], date);
+    auto apparentTemperatures = TimeSeries::ValuesForDate(this->predictions["apparentTemperature"], date);
+
+    auto precipitationProbabilities = TimeSeries::ValuesForDate(this->predictions["precipitationProbabilities"], date);
+    auto windSpeeds = TimeSeries::ValuesForDate(this->predictions["windSpeeds"], date);
+    auto windGusts = TimeSeries::ValuesForDate(this->predictions["windGusts"], date);
+    auto skyCover = TimeSeries::ValuesForDate(this->predictions["skyCover"], date);
+
+    auto highTemperature = TimeSeries::ValuesForDate(this->predictions["maxTemperature"], date).front();
+    auto lowTemperature = TimeSeries::ValuesForDate(this->predictions["minTemperature"], date).front();
+    return {
+        temperatures,
+        apparentTemperatures,
+        precipitationProbabilities,
+        windSpeeds,
+        windGusts,
+        skyCover,
+        highTemperature,
+        lowTemperature};
 }
 
 void WeatherPredictions::UnrollEncoding(std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions) {
-    std::vector<std::string> listNames {"temperature", "apparentTemperature"};
-    for(const auto& listName : listNames) {
+    for(const auto& listName : WeatherCommon::PredictionKeys) {
         auto items = rawPredictions[listName];
         auto unrolled = RunLengthEncoding::Decode(items);
         items.clear();
-        rawPredictions[listName] = unrolled;
+        this->predictions[listName] = unrolled;
     }
 }

@@ -4,8 +4,10 @@
 
 #include "RunLengthEncoding.h"
 
-std::vector<RawWeatherDatum> RunLengthEncoding::Decode(std::vector<RawWeatherDatum> data) {
-    std::vector<RawWeatherDatum> decoded{};
+// Using the recurrence value, expand the number of data points appropriately.
+// Note, this also converts the RawWeatherDatum to a TimeSeriesDataPoint.
+std::vector<TimeSeriesDataPoint> RunLengthEncoding::Decode(std::vector<RawWeatherDatum> data) {
+    std::vector<TimeSeriesDataPoint> decoded{};
 
     for(auto datum : data) {
         for(int index = 0; index < datum.GetRecurrence(); index++) {
@@ -13,7 +15,7 @@ std::vector<RawWeatherDatum> RunLengthEncoding::Decode(std::vector<RawWeatherDat
             ts.tm_hour += index;
             std::mktime(&ts);
 
-            decoded.emplace_back(ts, 1, datum.GetValue());
+            decoded.emplace_back(ts, datum.GetValue());
         }
     }
 

@@ -7,26 +7,19 @@
 
 #include "WeatherParser.h"
 #include "RawWeatherDatum.h"
+#include "WeatherCommon.h"
 
 using json = nlohmann::json;
 
 std::map<std::string, std::vector<RawWeatherDatum>> WeatherParser::Parse(const std::string& data) {
     json j = json::parse(data);
-
-    std::map<std::string, std::vector<RawWeatherDatum>> predictions {
-            {"maxTemperature", std::vector<RawWeatherDatum>()},
-            {"minTemperature", std::vector<RawWeatherDatum>()},
-            {"temperature", std::vector<RawWeatherDatum>()},
-            {"apparentTemperature", std::vector<RawWeatherDatum>()}
-    };
-
+    std::map<std::string, std::vector<RawWeatherDatum>> predictions;
     auto properties = j["properties"];
-
     std::string timestamp;
     double value;
 
-    for(auto it = predictions.begin(); it != predictions.end(); ++it) {
-        auto listName = it->first;
+    for(auto it = WeatherCommon::PredictionKeys.begin(); it != WeatherCommon::PredictionKeys.end(); ++it) {
+        auto listName = it->c_str();
         auto items = properties[listName]["values"];
 
         for(auto& item : items) {

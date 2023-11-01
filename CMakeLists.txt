@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(tidal VERSION 0.2)
 
-find_package(Boost 1.73 REQUIRED)
+find_package(Boost 1.83 REQUIRED)
 find_package(Catch2 3 REQUIRED)
 
 configure_file(TidalConfig.h.in TidalConfig.h)
