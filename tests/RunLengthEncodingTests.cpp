@@ -19,7 +19,7 @@ TEST_CASE("RunLengthEncoding") {
             };
 
             REQUIRE(RunLengthEncoding::Decode(input).size() == 1);
-            REQUIRE(RunLengthEncoding::Decode(input).at(0).GetTimestamp().tm_hour == 0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(0).getTimestamp().tm_hour == 0);
         }
 
         SECTION("Three recurrences") {
@@ -30,9 +30,9 @@ TEST_CASE("RunLengthEncoding") {
             };
 
             REQUIRE(RunLengthEncoding::Decode(input).size() == 3);
-            REQUIRE(RunLengthEncoding::Decode(input).at(0).GetTimestamp().tm_hour == 0);
-            REQUIRE(RunLengthEncoding::Decode(input).at(1).GetTimestamp().tm_hour == 1);
-            REQUIRE(RunLengthEncoding::Decode(input).at(2).GetTimestamp().tm_hour == 2);
+            REQUIRE(RunLengthEncoding::Decode(input).at(0).getTimestamp().tm_hour == 0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(1).getTimestamp().tm_hour == 1);
+            REQUIRE(RunLengthEncoding::Decode(input).at(2).getTimestamp().tm_hour == 2);
         }
 
         SECTION("Three recurrences cross midnight") {
@@ -43,10 +43,10 @@ TEST_CASE("RunLengthEncoding") {
             };
 
             REQUIRE(RunLengthEncoding::Decode(input).size() == 3);
-            REQUIRE(RunLengthEncoding::Decode(input).at(0).GetTimestamp().tm_hour == 22);
-            REQUIRE(RunLengthEncoding::Decode(input).at(1).GetTimestamp().tm_hour == 23);
-            REQUIRE(RunLengthEncoding::Decode(input).at(2).GetTimestamp().tm_hour == 0);
-            REQUIRE(RunLengthEncoding::Decode(input).at(2).GetTimestamp().tm_mday == 2);
+            REQUIRE(RunLengthEncoding::Decode(input).at(0).getTimestamp().tm_hour == 22);
+            REQUIRE(RunLengthEncoding::Decode(input).at(1).getTimestamp().tm_hour == 23);
+            REQUIRE(RunLengthEncoding::Decode(input).at(2).getTimestamp().tm_hour == 0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(2).getTimestamp().tm_mday == 2);
         }
 
         SECTION("Multiple Datum") {
@@ -59,20 +59,20 @@ TEST_CASE("RunLengthEncoding") {
             };
 
             REQUIRE(RunLengthEncoding::Decode(input).size() == 9);
-            REQUIRE(RunLengthEncoding::Decode(input).at(0).GetTimestamp().tm_hour == 0);
-            REQUIRE(RunLengthEncoding::Decode(input).at(0).GetValue() == 10.0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(0).getTimestamp().tm_hour == 0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(0).getValue() == 10.0);
 
-            REQUIRE(RunLengthEncoding::Decode(input).at(1).GetTimestamp().tm_hour == 1);
-            REQUIRE(RunLengthEncoding::Decode(input).at(1).GetValue() == 10.0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(1).getTimestamp().tm_hour == 1);
+            REQUIRE(RunLengthEncoding::Decode(input).at(1).getValue() == 10.0);
 
-            REQUIRE(RunLengthEncoding::Decode(input).at(2).GetTimestamp().tm_hour == 2);
-            REQUIRE(RunLengthEncoding::Decode(input).at(2).GetValue() == 10.0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(2).getTimestamp().tm_hour == 2);
+            REQUIRE(RunLengthEncoding::Decode(input).at(2).getValue() == 10.0);
 
-            REQUIRE(RunLengthEncoding::Decode(input).at(3).GetTimestamp().tm_hour == 3);
-            REQUIRE(RunLengthEncoding::Decode(input).at(3).GetValue() == 20.0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(3).getTimestamp().tm_hour == 3);
+            REQUIRE(RunLengthEncoding::Decode(input).at(3).getValue() == 20.0);
 
-            REQUIRE(RunLengthEncoding::Decode(input).at(8).GetTimestamp().tm_hour == 8);
-            REQUIRE(RunLengthEncoding::Decode(input).at(8).GetValue() == 20.0);
+            REQUIRE(RunLengthEncoding::Decode(input).at(8).getTimestamp().tm_hour == 8);
+            REQUIRE(RunLengthEncoding::Decode(input).at(8).getValue() == 20.0);
         }
     }
 }

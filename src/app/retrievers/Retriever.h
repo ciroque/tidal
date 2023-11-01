@@ -5,6 +5,7 @@
 #ifndef TIDAL_RETRIEVER_H
 #define TIDAL_RETRIEVER_H
 
+#include <cstdint>
 #include <string>
 #include <boost/beast/http/message.hpp>
 #include <boost/beast/http/dynamic_body.hpp>
