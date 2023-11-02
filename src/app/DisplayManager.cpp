@@ -19,7 +19,7 @@ void DisplayManager::DrawMoonPhase(float centerx, float centery, float radius, f
 {
     radius *= SCALEFACTOR;
     float rsquared = radius * radius;
-    float a = tan(phase) * radius;
+    float a = 0.570796326794897 * tan(phase) * radius;
     float b = sqrt(rsquared + (a * a));
     b *= b;
     float sign = (a >= 0) ? 1.0f : -1.0f;
@@ -74,7 +74,10 @@ void DisplayManager::Render(DisplayData displayData) {
 	verticalLine(buffer, channelPos, 0, 360, 0x0000FF);
 
 	/*Moon rendering*/
-	DrawMoonPhase(xoffset, 90, 50, M_PI * 2 * day.GetLunarData().phase);
+	auto corrected_phase = day.GetLunarData().phase;
+	if(corrected_phase < 0.5) corrected_phase = sinf((2*corrected_phase - 0.5) * M_PI) * M_PI_2 + M_PI_2;
+	else corrected_phase = sinf((2*corrected_phase + 0.5) * M_PI) * M_PI_2 + M_PI + M_PI_2;
+	DrawMoonPhase(xoffset, 90, 50, corrected_phase);
 	std::snprintf(stringBuf, sizeof(stringBuf), "%.2f%%", day.GetLunarData().visible * 100.0f);
 	int strOff = strlen(stringBuf) * 5;	/*Half pixel length for string*/
 	drawString(buffer, stringBuf, xoffset - strOff, 150, 0x0000FF);

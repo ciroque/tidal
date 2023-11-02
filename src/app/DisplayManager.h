@@ -13,9 +13,9 @@
 #include <lunar.h>
 
 #define MOONRAD 50
-#define MOONDIA 2 * MOONRAD
+#define MOONDIA (2 * MOONRAD)
 #define SCALEFACTOR 10
-#define SUPERAD MOONRAD * SCALEFACTOR
+#define SUPERAD (MOONRAD * SCALEFACTOR)
 
 //using namespace boost::adaptors;
 
