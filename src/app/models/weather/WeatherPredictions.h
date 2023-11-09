@@ -23,6 +23,9 @@ public:
 
     WeatherData ForDate(tm date);
     WeatherPredictions Load();
+
+    TimeSeriesDataPoint HighestTemperature();
+    TimeSeriesDataPoint LowestTemperature();
 };
 
 #endif //TIDAL_WEATHERPREDICTIONS_H

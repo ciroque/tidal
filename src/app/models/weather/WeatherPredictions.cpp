@@ -49,3 +49,11 @@ void WeatherPredictions::UnrollEncoding(std::map<std::string, std::vector<RawWea
         this->predictions[listName] = unrolled;
     }
 }
+
+TimeSeriesDataPoint WeatherPredictions::HighestTemperature() {
+    return TimeSeries::MaxValue(this->predictions["temperature"]);
+}
+
+TimeSeriesDataPoint WeatherPredictions::LowestTemperature() {
+    return TimeSeries::MinValue(this->predictions["temperature"]);
+}

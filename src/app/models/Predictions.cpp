@@ -38,8 +38,14 @@ DisplayData Predictions::BuildDisplayData() {
     TimeSeriesDataPoint highestTideLevel = tidePredictions.HighestTide();
     TimeSeriesDataPoint lowestTideLevel = tidePredictions.LowestTide();
 
+    TimeSeriesDataPoint highestTemperature = weatherPredictions.HighestTemperature();
+    TimeSeriesDataPoint lowestTemperature = weatherPredictions.LowestTemperature();
+
     return {
             dailyPredictions,
             highestTideLevel,
-            lowestTideLevel};
+            lowestTideLevel,
+            highestTemperature,
+            lowestTemperature
+    };
 }
