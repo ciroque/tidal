@@ -23,9 +23,9 @@ WeatherData WeatherPredictions::ForDate(const tm date) {
     auto temperatures = TimeSeries::ValuesForDate(this->predictions["temperature"], date);
     auto apparentTemperatures = TimeSeries::ValuesForDate(this->predictions["apparentTemperature"], date);
 
-    auto precipitationProbabilities = TimeSeries::ValuesForDate(this->predictions["precipitationProbabilities"], date);
-    auto windSpeeds = TimeSeries::ValuesForDate(this->predictions["windSpeeds"], date);
-    auto windGusts = TimeSeries::ValuesForDate(this->predictions["windGusts"], date);
+    auto precipitationProbabilities = TimeSeries::ValuesForDate(this->predictions["probabilityOfPrecipitation"], date);
+    auto windSpeeds = TimeSeries::ValuesForDate(this->predictions["windSpeed"], date);
+    auto windGusts = TimeSeries::ValuesForDate(this->predictions["windGust"], date);
     auto skyCover = TimeSeries::ValuesForDate(this->predictions["skyCover"], date);
 
     auto highTemperature = TimeSeries::ValuesForDate(this->predictions["maxTemperature"], date).front();
