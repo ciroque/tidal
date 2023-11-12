@@ -16,7 +16,7 @@ class DailyPrediction {
     date : tm
     lunarData : LunarData
     tideData : TideData
-    weatherData : AggregateWeatherData
+    weatherData : WeatherData
 }
 
 class LunarData {

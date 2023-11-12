@@ -8,14 +8,22 @@
 #include <src/app/Time.h>
 
 DisplayData::DisplayData() : DisplayData(
-std::vector<DailyPrediction>(),
-TimeSeriesDataPoint(),
-TimeSeriesDataPoint()) { }
+        std::vector<DailyPrediction>(),
+        TimeSeriesDataPoint(),
+        TimeSeriesDataPoint(),
+        TimeSeriesDataPoint(),
+        TimeSeriesDataPoint()) { }
 
-DisplayData::DisplayData(std::vector<DailyPrediction> dailyPredictions, TimeSeriesDataPoint highestTideLevel,
-                         TimeSeriesDataPoint lowestTideLevel) {
+DisplayData::DisplayData(
+    std::vector<DailyPrediction> dailyPredictions,
+    TimeSeriesDataPoint highestTideLevel,
+    TimeSeriesDataPoint lowestTideLevel,
+    TimeSeriesDataPoint highestTemperature,
+    TimeSeriesDataPoint lowestTemperature) {
     this->dailyPredictions = std::move(dailyPredictions);
     this->highestTideLevel = highestTideLevel;
     this->lowestTideLevel = lowestTideLevel;
+    this->highestTemperature = highestTemperature;
+    this->lowestTemperature = lowestTemperature;
     this->hour = Time::HoursNow();
 }

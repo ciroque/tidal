@@ -18,8 +18,8 @@ std::map<std::string, std::vector<RawWeatherDatum>> WeatherParser::Parse(const s
     std::string timestamp;
     double value;
 
-    for(auto it = WeatherCommon::PredictionKeys.begin(); it != WeatherCommon::PredictionKeys.end(); ++it) {
-        auto listName = it->c_str();
+    for(const auto& predictionKey : WeatherCommon::PredictionKeys) {
+        auto listName = predictionKey.c_str();
         auto items = properties[listName]["values"];
 
         for(auto& item : items) {
