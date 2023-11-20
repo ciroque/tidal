@@ -17,12 +17,16 @@ private:
     std::map<std::string, std::vector<TimeSeriesDataPoint>> predictions;
 
     void UnrollEncoding(std::map<std::string, std::vector<RawWeatherDatum>> rawPredictions);
+    void PadMissingValues();
 
 public:
     explicit WeatherPredictions(const WeatherRetriever &retriever);
 
     WeatherData ForDate(tm date);
     WeatherPredictions Load();
+
+    TimeSeriesDataPoint HighestTemperature();
+    TimeSeriesDataPoint LowestTemperature();
 };
 
 #endif //TIDAL_WEATHERPREDICTIONS_H

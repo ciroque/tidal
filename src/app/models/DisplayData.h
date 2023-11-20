@@ -16,14 +16,21 @@
 class DisplayData {
 public:
     DisplayData();
-    DisplayData(std::vector<DailyPrediction> dailyPredictions, TimeSeriesDataPoint highestTideLevel,
-                TimeSeriesDataPoint lowestTideLevel);
+    DisplayData(
+        std::vector<DailyPrediction> dailyPredictions,
+        TimeSeriesDataPoint highestTideLevel,
+        TimeSeriesDataPoint lowestTideLevel,
+        TimeSeriesDataPoint highestTemperature,
+        TimeSeriesDataPoint lowestTemperature);
 
     unsigned int hour;
 
     std::vector<DailyPrediction> dailyPredictions;
     TimeSeriesDataPoint highestTideLevel;
     TimeSeriesDataPoint lowestTideLevel;
+
+    TimeSeriesDataPoint highestTemperature;
+    TimeSeriesDataPoint lowestTemperature;
 };
 
 

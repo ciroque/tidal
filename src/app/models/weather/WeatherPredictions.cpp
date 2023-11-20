@@ -15,6 +15,7 @@ WeatherPredictions WeatherPredictions::Load() {
     auto data = retriever.Retrieve();
     auto rawPredictions = WeatherParser::Parse(data);
     UnrollEncoding(rawPredictions);
+    PadMissingValues();
 
     return *this;
 }
@@ -23,13 +24,13 @@ WeatherData WeatherPredictions::ForDate(const tm date) {
     auto temperatures = TimeSeries::ValuesForDate(this->predictions["temperature"], date);
     auto apparentTemperatures = TimeSeries::ValuesForDate(this->predictions["apparentTemperature"], date);
 
-    auto precipitationProbabilities = TimeSeries::ValuesForDate(this->predictions["precipitationProbabilities"], date);
-    auto windSpeeds = TimeSeries::ValuesForDate(this->predictions["windSpeeds"], date);
-    auto windGusts = TimeSeries::ValuesForDate(this->predictions["windGusts"], date);
+    auto precipitationProbabilities = TimeSeries::ValuesForDate(this->predictions["probabilityOfPrecipitation"], date);
+    auto windSpeeds = TimeSeries::ValuesForDate(this->predictions["windSpeed"], date);
+    auto windGusts = TimeSeries::ValuesForDate(this->predictions["windGust"], date);
     auto skyCover = TimeSeries::ValuesForDate(this->predictions["skyCover"], date);
 
-    auto highTemperature = TimeSeries::ValuesForDate(this->predictions["maxTemperature"], date).front();
-    auto lowTemperature = TimeSeries::ValuesForDate(this->predictions["minTemperature"], date).front();
+    auto highTemperature = TimeSeries::ValuesForDate(this->predictions["temperature"], date).front();
+    auto lowTemperature = TimeSeries::ValuesForDate(this->predictions["temperature"], date).front();
     return {
         temperatures,
         apparentTemperatures,
@@ -47,5 +48,31 @@ void WeatherPredictions::UnrollEncoding(std::map<std::string, std::vector<RawWea
         auto unrolled = RunLengthEncoding::Decode(items);
         items.clear();
         this->predictions[listName] = unrolled;
+    }
+}
+
+TimeSeriesDataPoint WeatherPredictions::HighestTemperature() {
+    return TimeSeries::MaxValue(this->predictions["temperature"]);
+}
+
+TimeSeriesDataPoint WeatherPredictions::LowestTemperature() {
+    return TimeSeries::MinValue(this->predictions["temperature"]);
+}
+
+// The use of std::vector::insert here is reasonably inefficient, but shouldn't be a problem. Sometime in the future
+// if someone is bored go ahead and fix it. Possibly just spin up a new vector and copy the values over...?
+void WeatherPredictions::PadMissingValues() {
+    for( const auto& listName : WeatherCommon::PredictionKeys) {
+        auto items = this->predictions[listName];
+        auto head = items.front();
+        auto missing = head.getTimestamp().tm_hour - 1;
+        for(missing; missing >= 0; missing--) {
+            auto padTimestamp = head.getTimestamp();
+            padTimestamp.tm_hour = missing;
+            TimeSeriesDataPoint pad = TimeSeriesDataPoint(padTimestamp, head.getValue());
+            items.insert(items.begin(), pad);
+        }
+        this->predictions[listName].clear();
+        this->predictions[listName] = items;
     }
 }
