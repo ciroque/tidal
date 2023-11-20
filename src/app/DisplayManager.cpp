@@ -57,6 +57,8 @@ void DisplayManager::Render(DisplayData displayData) {
     static int channelWidth = buffer->width / daysToDisplay;
     static int halfChannelWidth = channelWidth / 2;	/*Middle of the channel*/
     int oldx = -10, oldy = 200;	/*Used for rendering tide level lines*/
+    int oldx2 = -10, oldy2 = 530;	/*Used for rendering temperature level lines*/
+    int oldx3 = -10, oldy3 = 470;	/*Used for rendering percieved temperature level lines*/
     char stringBuf[64];	/*Buffer for writing strings to*/
     float curLevel;	/*Current tide level*/
 
@@ -64,6 +66,8 @@ void DisplayManager::Render(DisplayData displayData) {
     horizontalLine(buffer, 0, 1024, 170, 0x0000FF);
     horizontalLine(buffer, 0, 1024, 222, 0x0000FF);
     horizontalLine(buffer, 0, 1024, 350, 0x0000FF);
+    horizontalLine(buffer, 0, 1024, 540, 0xC00808);
+    horizontalLine(buffer, 0, 1024, 670, 0xC00808);
 
     for(auto prediction : displayData.dailyPredictions | indexed()) {
 	int channelPos = prediction.index() * channelWidth;	/*Current channel position*/
@@ -72,6 +76,7 @@ void DisplayManager::Render(DisplayData displayData) {
 
 	/*Line stuff*/
 	verticalLine(buffer, channelPos, 0, 360, 0x0000FF);
+	verticalLine(buffer, channelPos, 690, 520, 0xC00808);
 
 	/*Moon rendering*/
 	auto corrected_phase = day.GetLunarData().phase;
@@ -123,6 +128,116 @@ void DisplayManager::Render(DisplayData displayData) {
 	drawString(buffer, "low:", channelPos + 5, 200, 0x0000FF);
 	std::snprintf(stringBuf, sizeof(stringBuf), "%.3f' @ %02d00", lowTide, lowTime.tm_hour);
 	drawString(buffer, stringBuf, channelPos + 5, 210, 0x0000FF);
+
+	/*Weather rendering*/
+	std::puts("Daily temperatures");
+	auto temps = day.GetWeatherData().getTemperatures();
+	float tempsPointSpacing = (float)channelWidth / (float)temps.size();
+	for(auto temp : temps | indexed()){
+	    auto temperature = temp.value();
+	    double celsius = temperature.getValue();
+	    std::printf("Timestamp: %d/%d - %d:%d:%d, "
+		        "Temperature: %fC\n",
+		        temperature.getTimestamp().tm_mon + 1,
+		        temperature.getTimestamp().tm_mday,
+		        temperature.getTimestamp().tm_hour,
+		        temperature.getTimestamp().tm_min,
+		        temperature.getTimestamp().tm_sec,
+		        celsius);
+	    int ypoint = 730 - celsius * 10;	/*Y coord of temperature level on-screen*/
+	    int xpoint = channelPos + tempsPointSpacing * temp.index();	/*Same as above but for x*/
+	    drawline(buffer, oldx2, oldy2, xpoint, ypoint, 0xF08000);
+	    oldx2 = xpoint; oldy2 = ypoint;	/*Update old coords*/
+	}
+
+	std::puts("Daily apparent temperatures");
+	auto apparentTemps = day.GetWeatherData().getApparentTemperatures();
+	float apparentTempsPointSpacing = (float)channelWidth / (float)temps.size();
+	for(auto temp : apparentTemps | indexed()){
+	    auto temperature = temp.value();
+	    auto time = temperature.getTimestamp();
+	    double celsius = temperature.getValue();
+	    std::printf("Timestamp: %d/%d - %d:%d:%d, "
+		        "Apparent Temperature: %fC\n",
+		        temperature.getTimestamp().tm_mon + 1,
+		        temperature.getTimestamp().tm_mday,
+		        temperature.getTimestamp().tm_hour,
+		        temperature.getTimestamp().tm_min,
+		        temperature.getTimestamp().tm_sec,
+		        celsius);
+	    int ypoint = 730 - celsius * 10;	/*Y coord of apparent temperature level on-screen*/
+	    int xpoint = channelPos + apparentTempsPointSpacing * temp.index();	/*Same as above but for x*/
+	    drawline(buffer, oldx3, oldy3, xpoint, ypoint, 0x80F000);
+	    oldx3 = xpoint; oldy3 = ypoint;	/*Update old coords*/
+	    if(time.tm_hour == 6  |
+	       time.tm_hour == 12 |
+	       time.tm_hour == 18)
+		    verticalLine(buffer, xpoint, 670, 540, 0x604040);
+	    int bottom = (time.tm_hour % 6) == 0 ? 690 : 680;
+	    verticalLine(buffer, xpoint, 670, bottom, 0xC00808);	/*Hourly tick mark*/
+	}
+
+	/*Currently unpopulated*/
+//	std::puts("Daily precipitation probabilities");
+//	auto rainChance = day.GetWeatherData().getPrecipitationProbabilities();
+//	for(auto temp : rainChance){
+//		std::printf("Timestamp: %d/%d - %d:%d:%d, "
+//			    "Chance of rain: %f%%\n",
+//			    temp.getTimestamp().tm_mon + 1,
+//			    temp.getTimestamp().tm_mday,
+//			    temp.getTimestamp().tm_hour,
+//			    temp.getTimestamp().tm_min,
+//			    temp.getTimestamp().tm_sec,
+//			    temp.getValue());
+//	}
+	
+	/*Currently unpopulated*/
+//	std::puts("Daily wind speeds");
+//	auto windSpeeds = day.GetWeatherData().getWindSpeeds();
+//	for(auto temp : windSpeeds){
+//		std::printf("Timestamp: %d/%d - %d:%d:%d, "
+//			    "Wind speed: %fm/s\n",
+//			    temp.getTimestamp().tm_mon + 1,
+//			    temp.getTimestamp().tm_mday,
+//			    temp.getTimestamp().tm_hour,
+//			    temp.getTimestamp().tm_min,
+//			    temp.getTimestamp().tm_sec,
+//			    temp.getValue());
+//	}
+	
+	/*Currently unpopulated*/
+//	std::puts("Daily sky cover");
+//	auto skyCover = day.GetWeatherData().getSkyCover();
+//	for(auto temp : temps){
+//		std::printf("Timestamp: %d/%d - %d:%d:%d, "
+//			    "Sky cover: %f%%\n",
+//			    temp.getTimestamp().tm_mon + 1,
+//			    temp.getTimestamp().tm_mday,
+//			    temp.getTimestamp().tm_hour,
+//			    temp.getTimestamp().tm_min,
+//			    temp.getTimestamp().tm_sec,
+//			    temp.getValue());
+//	}
+
+	/*Populated but returns an incorrect value (sometimes temp is right but the timestamp is never right)*/
+//	std::printf("Timestamp: %d/%d - %d:%d:%d, "
+//		    "Highest temperature: %fC\n",
+//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_mon + 1,
+//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_mday,
+//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_hour,
+//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_min,
+//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_sec,
+//		    day.GetWeatherData().getHighTemperature().getValue());
+
+	/*Populated, but returns an incorrect value (always returns 8.88888)*/
+//	std::printf("Timestamp: %d/%d - %d:%d:%d, "
+//		    "Lowest temperature: %fC\n",
+//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_mon + 1,
+//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_mday,
+//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_hour,
+//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_min,
+//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_sec,
+//		    day.GetWeatherData().getLowTemperature().getValue());
     }
 
     /*Render current tide mark and print level*/
@@ -139,6 +254,15 @@ void DisplayManager::Render(DisplayData displayData) {
     int strOff = strlen(stringBuf) * 5;
     strOff = xoffset < strOff ? xoffset - 5 : strOff;
     drawString(buffer, stringBuf, xoffset - strOff, 395, 0x0000FF);
+
+    /*Render current temperature mark*/
+    auto curTempLevels = displayData.dailyPredictions.at(0).GetWeatherData().getTemperatures();
+    xoffset = (float)((displayData.hour - (24 - curTempLevels.size())) * channelWidth) / curTempLevels.size();
+
+    /*Draws white arrow pointing at current temperature*/
+    verticalLine(buffer, xoffset, 700, 715, 0xFFFFFF);
+    drawline(buffer, xoffset, 700, xoffset + 5, 705, 0xFFFFFF);
+    drawline(buffer, xoffset, 700, xoffset - 5, 705, 0xFFFFFF);
 
     drawBigString(buffer, "Mystic Rhythms", 2, 750, 0xFF00FF);
 

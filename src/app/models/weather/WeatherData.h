@@ -30,6 +30,15 @@ public:
             std::vector<TimeSeriesDataPoint> skyCover,
             TimeSeriesDataPoint highTemperature,
             TimeSeriesDataPoint lowTemperature);
+
+    inline std::vector<TimeSeriesDataPoint> getTemperatures() { return this->temperatures; }
+    inline std::vector<TimeSeriesDataPoint> getApparentTemperatures() { return this->apparentTemperatures; }
+    inline std::vector<TimeSeriesDataPoint> getPrecipitationProbabilities() { return this->precipitationProbabilities; }
+    inline std::vector<TimeSeriesDataPoint> getWindSpeeds() { return this->windSpeeds; }
+    inline std::vector<TimeSeriesDataPoint> getWindGusts() { return this->windGusts; }
+    inline std::vector<TimeSeriesDataPoint> getSkyCover() { return this->skyCover; }
+    inline TimeSeriesDataPoint getHighTemperature() { return this->highTemperature; }
+    inline TimeSeriesDataPoint getLowTemperature() { return this->lowTemperature; }
 };
 
 #endif //TIDAL_WEATHERDATA_H
