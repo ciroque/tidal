@@ -23,7 +23,7 @@ namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 std::string Retriever::Retrieve(std::string host, std::string port, std::string target) {
-    std::string response = "[]";
+    std::string response = "{}";
     try
     {
         int version = 11;
@@ -61,7 +61,13 @@ std::string Retriever::Retrieve(std::string host, std::string port, std::string 
 
         http::response<http::string_body> res;
         http::read(stream, buffer, res);
-        response = res.body();
+
+        int status = res.base().result_int();
+        if(status == 200) {
+            response = res.body();
+        } else {
+            std::cerr << "ERROR Retrieving data (" << host << "); Status: " << status << ". Body: " << res.body() << std::endl;
+        }
 
         stream.shutdown(ec);
         if(ec == net::error::eof)
