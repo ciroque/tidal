@@ -52,12 +52,12 @@ public:
 
     template<typename T>
     static T MinValue(const std::vector<T>& vector) {
-        return *std::min_element(vector.begin(), vector.end(), comparator);
+        return vector.empty() ? T() : *std::min_element(vector.begin(), vector.end(), comparator);
     }
 
     template<typename T>
     static T MaxValue(const std::vector<T>& vector) {
-        return *std::max_element(vector.begin(), vector.end(), comparator);
+        return vector.empty() ? T() : *std::max_element(vector.begin(), vector.end(), comparator);
     }
 
     template <typename T>
