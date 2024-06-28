@@ -6,7 +6,7 @@
 #include "graphLib.h"
 #include "src/app/models/DisplayData.h"
 #include "FrameBufferOpenException.h"
-#define XTESTING
+//#define XTESTING
 
 using namespace boost::adaptors;
 
@@ -61,11 +61,17 @@ void DisplayManager::Render(DisplayData displayData) {
     int oldx3 = -10, oldy3 = 470;	/*Used for rendering percieved temperature level lines*/
     char stringBuf[64];	/*Buffer for writing strings to*/
     float curLevel;	/*Current tide level*/
+    float curTemp;	/*Current temperature*/
+    float highestTideLevel = displayData.highestTideLevel.getValue();
+    float lowestTideLevel = displayData.lowestTideLevel.getValue();
+    float highestTemperature = displayData.highestTemperature.getValue();
+    float lowestTemperature = displayData.lowestTemperature.getValue();
 
     /*Background rendering*/
     horizontalLine(buffer, 0, 1024, 170, 0x0000FF);
     horizontalLine(buffer, 0, 1024, 222, 0x0000FF);
     horizontalLine(buffer, 0, 1024, 350, 0x0000FF);
+    horizontalLine(buffer, 0, 1024, 488, 0xC00808);
     horizontalLine(buffer, 0, 1024, 540, 0xC00808);
     horizontalLine(buffer, 0, 1024, 670, 0xC00808);
 
@@ -76,7 +82,7 @@ void DisplayManager::Render(DisplayData displayData) {
 
 	/*Line stuff*/
 	verticalLine(buffer, channelPos, 0, 360, 0x0000FF);
-	verticalLine(buffer, channelPos, 690, 520, 0xC00808);
+	verticalLine(buffer, channelPos, 690, 468, 0xC00808);
 
 	/*Moon rendering*/
 	auto corrected_phase = day.GetLunarData().phase;
@@ -101,11 +107,12 @@ void DisplayManager::Render(DisplayData displayData) {
 	    auto tideData = tdat.value();	/*Easy accessor*/
 	    float level = tideData.getValue();
 	    auto time = tideData.getTimestamp();
-	    int ypoint = 340 - level * 10;	/*Y coord of tide level on-screen*/
+	    float level_normal = (level - lowestTideLevel) / (highestTideLevel - lowestTideLevel);
+	    int ypoint = 350 - level_normal * 128; 	/*Y coord of tide level on-screen*/
 	    int xpoint = channelPos + tidePointSpacing * tdat.index();	/*Same as above but for x*/
 	    drawline(buffer, oldx, oldy, xpoint, ypoint, 0x8080FF);
 	    oldx = xpoint; oldy = ypoint;	/*Update old coords*/
-	    if(time.tm_hour == 6  |
+	    if(time.tm_hour == 6  ||
 	       time.tm_hour == 12 |
 	       time.tm_hour == 18)
 		    verticalLine(buffer, xpoint, 350, 222, 0x000060);
@@ -130,54 +137,53 @@ void DisplayManager::Render(DisplayData displayData) {
 	drawString(buffer, stringBuf, channelPos + 5, 210, 0x0000FF);
 
 	/*Weather rendering*/
-	std::puts("Daily temperatures");
 	auto temps = day.GetWeatherData().getTemperatures();
 	float tempsPointSpacing = (float)channelWidth / (float)temps.size();
+	auto highTempTime = day.GetWeatherData().getHighTemperature().getTimestamp();
+	auto highTemp = day.GetWeatherData().getHighTemperature().getValue();
+	auto lowTempTime = day.GetWeatherData().getLowTemperature().getTimestamp();
+	auto lowTemp = day.GetWeatherData().getLowTemperature().getValue();
 	for(auto temp : temps | indexed()){
 	    auto temperature = temp.value();
 	    double celsius = temperature.getValue();
-	    std::printf("Timestamp: %d/%d - %d:%d:%d, "
-		        "Temperature: %fC\n",
-		        temperature.getTimestamp().tm_mon + 1,
-		        temperature.getTimestamp().tm_mday,
-		        temperature.getTimestamp().tm_hour,
-		        temperature.getTimestamp().tm_min,
-		        temperature.getTimestamp().tm_sec,
-		        celsius);
-	    int ypoint = 730 - celsius * 10;	/*Y coord of temperature level on-screen*/
+	    float celsius_normal = (celsius - lowestTemperature) / (highestTemperature - lowestTemperature);
+	    int ypoint = 670 - celsius_normal * 130;	/*Y coord of temperature level on-screen*/
 	    int xpoint = channelPos + tempsPointSpacing * temp.index();	/*Same as above but for x*/
 	    drawline(buffer, oldx2, oldy2, xpoint, ypoint, 0xF08000);
 	    oldx2 = xpoint; oldy2 = ypoint;	/*Update old coords*/
 	}
 
-	std::puts("Daily apparent temperatures");
 	auto apparentTemps = day.GetWeatherData().getApparentTemperatures();
 	float apparentTempsPointSpacing = (float)channelWidth / (float)temps.size();
 	for(auto temp : apparentTemps | indexed()){
 	    auto temperature = temp.value();
 	    auto time = temperature.getTimestamp();
 	    double celsius = temperature.getValue();
-	    std::printf("Timestamp: %d/%d - %d:%d:%d, "
-		        "Apparent Temperature: %fC\n",
-		        temperature.getTimestamp().tm_mon + 1,
-		        temperature.getTimestamp().tm_mday,
-		        temperature.getTimestamp().tm_hour,
-		        temperature.getTimestamp().tm_min,
-		        temperature.getTimestamp().tm_sec,
-		        celsius);
-	    int ypoint = 730 - celsius * 10;	/*Y coord of apparent temperature level on-screen*/
+	    float celsius_normal = (celsius - lowestTemperature) / (highestTemperature - lowestTemperature);
+	    int ypoint = 670 - celsius_normal * 130;	/*Y coord of temperature level on-screen*/
 	    int xpoint = channelPos + apparentTempsPointSpacing * temp.index();	/*Same as above but for x*/
 	    drawline(buffer, oldx3, oldy3, xpoint, ypoint, 0x80F000);
 	    oldx3 = xpoint; oldy3 = ypoint;	/*Update old coords*/
-	    if(time.tm_hour == 6  |
-	       time.tm_hour == 12 |
+	    if(time.tm_hour == 6  ||
+	       time.tm_hour == 12 ||
 	       time.tm_hour == 18)
 		    verticalLine(buffer, xpoint, 670, 540, 0x604040);
 	    int bottom = (time.tm_hour % 6) == 0 ? 690 : 680;
 	    verticalLine(buffer, xpoint, 670, bottom, 0xC00808);	/*Hourly tick mark*/
+	    if((prediction.index() == 0) && (time.tm_hour == displayData.hour))
+		    curTemp = celsius;
 	}
 
-	/*Currently unpopulated*/
+	/*Prints highest temperature and time*/
+	drawString(buffer, "high:", channelPos + 5, 500, 0xC00808);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.2fC @ %02d00", highTemp, highTempTime.tm_hour);
+	drawString(buffer, stringBuf, channelPos + 5, 510, 0xC00808);
+
+	/*Prints lowest temperature and time*/
+	drawString(buffer, "low:", channelPos + 5, 520, 0xC00808);
+	std::snprintf(stringBuf, sizeof(stringBuf), "%.2fC @ %02d00", lowTemp, lowTempTime.tm_hour);
+	drawString(buffer, stringBuf, channelPos + 5, 530, 0xC00808);
+
 //	std::puts("Daily precipitation probabilities");
 //	auto rainChance = day.GetWeatherData().getPrecipitationProbabilities();
 //	for(auto temp : rainChance){
@@ -190,8 +196,7 @@ void DisplayManager::Render(DisplayData displayData) {
 //			    temp.getTimestamp().tm_sec,
 //			    temp.getValue());
 //	}
-	
-	/*Currently unpopulated*/
+//      
 //	std::puts("Daily wind speeds");
 //	auto windSpeeds = day.GetWeatherData().getWindSpeeds();
 //	for(auto temp : windSpeeds){
@@ -204,8 +209,7 @@ void DisplayManager::Render(DisplayData displayData) {
 //			    temp.getTimestamp().tm_sec,
 //			    temp.getValue());
 //	}
-	
-	/*Currently unpopulated*/
+//      
 //	std::puts("Daily sky cover");
 //	auto skyCover = day.GetWeatherData().getSkyCover();
 //	for(auto temp : temps){
@@ -218,26 +222,6 @@ void DisplayManager::Render(DisplayData displayData) {
 //			    temp.getTimestamp().tm_sec,
 //			    temp.getValue());
 //	}
-
-	/*Populated but returns an incorrect value (sometimes temp is right but the timestamp is never right)*/
-//	std::printf("Timestamp: %d/%d - %d:%d:%d, "
-//		    "Highest temperature: %fC\n",
-//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_mon + 1,
-//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_mday,
-//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_hour,
-//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_min,
-//		    day.GetWeatherData().getHighTemperature().getTimestamp().tm_sec,
-//		    day.GetWeatherData().getHighTemperature().getValue());
-
-	/*Populated, but returns an incorrect value (always returns 8.88888)*/
-//	std::printf("Timestamp: %d/%d - %d:%d:%d, "
-//		    "Lowest temperature: %fC\n",
-//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_mon + 1,
-//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_mday,
-//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_hour,
-//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_min,
-//		    day.GetWeatherData().getLowTemperature().getTimestamp().tm_sec,
-//		    day.GetWeatherData().getLowTemperature().getValue());
     }
 
     /*Render current tide mark and print level*/
@@ -263,6 +247,12 @@ void DisplayManager::Render(DisplayData displayData) {
     verticalLine(buffer, xoffset, 700, 715, 0xFFFFFF);
     drawline(buffer, xoffset, 700, xoffset + 5, 705, 0xFFFFFF);
     drawline(buffer, xoffset, 700, xoffset - 5, 705, 0xFFFFFF);
+
+    /*Prints current temperature*/
+    std::snprintf(stringBuf, sizeof(stringBuf), "cur: %.2fC\'", curTemp);
+    strOff = strlen(stringBuf) * 5;
+    strOff = xoffset < strOff ? xoffset - 5 : strOff;
+    drawString(buffer, stringBuf, xoffset - strOff, 720, 0xC00808);
 
     drawBigString(buffer, "Mystic Rhythms", 2, 750, 0xFF00FF);
 
