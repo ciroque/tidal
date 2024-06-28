@@ -7,6 +7,7 @@
 #ifndef TIDAL_CONFIGREADER_H
 #define TIDAL_CONFIGREADER_H
 
+#include <algorithm>
 #include <iostream>
 #include <map>
 

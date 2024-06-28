@@ -5,6 +5,7 @@
 #ifndef TIDAL_TIMESERIESDATAPOINT_H
 #define TIDAL_TIMESERIESDATAPOINT_H
 
+#include <ctime>
 #include <string>
 #include <vector>
 
