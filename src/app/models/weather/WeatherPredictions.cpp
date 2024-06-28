@@ -14,6 +14,10 @@ WeatherPredictions::WeatherPredictions(const WeatherRetriever &retriever) : retr
 WeatherPredictions WeatherPredictions::Load() {
     auto data = retriever.Retrieve();
     auto rawPredictions = WeatherParser::Parse(data);
+    if(rawPredictions.empty()) {
+        return *this;
+    }
+
     UnrollEncoding(rawPredictions);
     PadMissingValues();
 
@@ -29,8 +33,9 @@ WeatherData WeatherPredictions::ForDate(const tm date) {
     auto windGusts = TimeSeries::ValuesForDate(this->predictions["windGust"], date);
     auto skyCover = TimeSeries::ValuesForDate(this->predictions["skyCover"], date);
 
-    auto highTemperature = TimeSeries::ValuesForDate(this->predictions["temperature"], date).front();
-    auto lowTemperature = TimeSeries::ValuesForDate(this->predictions["temperature"], date).front();
+    auto highTemperature = TimeSeries::TimeSeries::MaxValue(temperatures);
+    auto lowTemperature = TimeSeries::MinValue(temperatures);
+
     return {
         temperatures,
         apparentTemperatures,
