@@ -21,6 +21,7 @@ private:
     static tm AdjustTime(const std::string& validTime);
 
 public:
+    RawWeatherDatum();
     RawWeatherDatum(tm timestamp, int recurrence, double value);
 
     static RawWeatherDatum Build(const std::string& validTime, double value);
