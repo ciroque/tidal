@@ -3,10 +3,13 @@
 //
 
 #include "RawWeatherDatum.h"
+#include "../../Time.h"
 
 #include <string>
 
 std::regex ISO8601_DURATION_HOUR_EXTRACT = std::regex("^/?PT([0-9]+)H$");
+
+RawWeatherDatum::RawWeatherDatum() : TimeSeriesDataPoint(Time::GetLocalTime(), 0.0) { }
 
 RawWeatherDatum::RawWeatherDatum(tm timestamp, int recurrence, double value) : TimeSeriesDataPoint(timestamp, value) {
     this->recurrence = recurrence;
@@ -26,6 +29,8 @@ int RawWeatherDatum::DetermineRecurrence(const std::string& validTime) {
 
     return hours;
 }
+
+
 
 tm RawWeatherDatum::AdjustTime(const std::string& validTime){
     tm timestamp{.tm_isdst = -1};
